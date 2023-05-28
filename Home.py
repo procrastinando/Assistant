@@ -180,4 +180,27 @@ def start(authenticator):
 
 
 if __name__ == '__main__':
-    main()
+    with open('config.yaml', 'r') as file:
+        config = yaml.safe_load(file)
+
+    if len(config['credentials']['usernames']) < 1:
+        st.title("Set up bot")
+        
+        tt = st.text_input("Set Telegram bot Token")
+        au = st.text_input("Set App URL")
+        ad = st.text_input("Set admin user ID (Telegram ID)")
+        pe = st.text_input("Set preauthorized email")
+
+        if st.button("Start"):
+            config['telegram']['token'] = tt
+            config['admin']['url'] = au
+            config['admin']['id'] = ad
+            config['preauthorized']['emails'] = pe
+
+            with open('config.yaml', 'w') as file:
+                yaml.dump(config, file)
+
+            st.write("Please, restart the container")
+
+    else:
+        main()
