@@ -9,7 +9,7 @@ preauthorized_mail = sys.argv[4]
 
 # Update basic configuration
 with open('config.yaml', 'r') as file:
-    config = yaml.safe_load(file)['engines']
+    config = yaml.safe_load(file)
 
 config['telegram']['token'] = telegram_token
 config['admin']['url'] = streamlit_url
