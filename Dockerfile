@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
     tesseract-ocr\
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/streamlit/streamlit-example.git .
+RUN git clone https://github.com/procrastinando/Assistant.git .
 
 RUN pip3 install -r requirements.txt
 
