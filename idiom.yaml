@@ -1,0 +1,372 @@
+Add homework:
+  en: Add homework
+  es: Agregar tarea
+Add new homework, separate sentences by dots:
+  en: Add new homework, separate sentences by dots
+  es: Agregar nueva tarea, separar oraciones por puntos
+Balance:
+  en: Balance
+  es: Saldo
+Child:
+  en: List of members
+  es: Lista de miembros
+Choose a vocabulary name:
+  en: Choose a vocabulary name
+  es: Elige un nombre de vocabulario
+Create vocabulary:
+  en: Create vocabulary
+  es: Crear vocabulario
+Delete homework:
+  en: Delete homework
+  es: Eliminar tarea
+Delete vocabulary:
+  en: Delete vocabulary
+  es: Eliminar vocabulario
+Difficulty:
+  en: Difficulty
+  es: Dificultad
+Divisions range:
+  en: Divisions range
+  es: Rango de divisiones
+Multiplications range:
+  en: Multiplications range
+  es: Rango de multiplicaciones
+Enter new homework name:
+  en: Enter new homework name
+  es: Ingrese el nuevo nombre de la tarea
+Exchange rate:
+  en: Exchange rate
+  es: Tipo de cambio
+Fault penalty:
+  en: Fault penalty
+  es: Penalización por falta
+Homework, separate sentences by dots:
+  en: Homework, separate sentences by dots
+  es: Tarea, oraciones separadas por puntos
+Image to text tool:
+  en: Image to text tool
+  es: Herramienta de imagen a texto
+Languages settings:
+  en: Languages settings
+  es: Configuración de idiomas
+Listen and Write:
+  en: Listen and Write
+  es: Escuchar y escribir
+Listen and Write homeworks:
+  en: Listen and Write homeworks
+  es: Escuchar y escribir tareas
+Listen and write:
+  en: Listen and write
+  es: Escuchar y escribir
+Mathematics:
+  en: Mathematics
+  es: Matemáticas
+Sums range:
+  en: Sums range
+  es: Rango de sumas
+Rests range:
+  en: Rests range
+  es: Rango de restas
+Basic operations:
+  en: Basic operations
+  es: Operaciones basicas
+Read and Speak homeworks:
+  en: Read and Speak homeworks
+  es: Tareas de leer y hablar
+Read and speak:
+  en: Read and speak
+  es: Leer y hablar
+Restart homework:
+  en: Restart homework
+  es: Reiniciar la tarea
+Save:
+  en: Save
+  es: Guardar
+Select a homework to update or delete:
+  en: Select a homework to update or delete
+  es: Seleccione una tarea para actualizar o eliminar
+Select images to process:
+  en: Select image to process
+  es: Seleccionar imágen para procesar
+Select language:
+  en: Select language
+  es: Seleccione el idioma
+Select vocabulary language:
+  en: Select vocabulary language
+  es: Seleccione el idioma del vocabulario
+Target score:
+  en: Target score
+  es: Puntuación objetivo
+Teacher assistant:
+  en: Teacher assistant
+  es: Profesor asistente
+Text to voice model:
+  en: Text to voice model
+  es: Modelo de texto a voz
+Update homework:
+  en: Update homework
+  es: Actualizar la tarea
+Update vocabulary:
+  en: Update vocabulary
+  es: Actualizar vocabulario
+Read images:
+  en: Read images
+  es: Leer imagenes
+Use ChatGPT to make a sentence:
+  en: Use ChatGPT to make a sentence
+  es: Usa ChatGPT para hacer una oración
+Vocabulary (separate by commas):
+  en: Vocabulary (separate by commas)
+  es: Vocabulario (separado por comas)
+Voice speed:
+  en: Voice speed
+  es: Velocidad de voz
+Voice to text model:
+  en: Voice to text model
+  es: Modelo de voz a texto
+Welcome:
+  en: Welcome
+  es: Bienvenido
+Whisper size (the larger, the slower):
+  en: Whisper size (the larger, the slower)
+  es: Tamaño de Whisper (cuanto más grande, más lento)
+Your balance:
+  en: Your balance
+  es: Tu saldo
+Access to your console here:
+  en: Access to your console here
+  es: Accede a tu consola aquí
+Current:
+  en: Current
+  es: Actual
+Choose a new name:
+  en: Choose a new name
+  es: Elige un nuevo nombre
+Type a new password:
+  en: Type a new password
+  es: Escriba una nueva contraseña
+Insert the child's ID:
+  en: Insert the Member's ID
+  es: Introduce el ID del Miembro
+List of listen-write:
+  en: List of listen-write
+  es: Lista de escuchar-escribir
+List of read-speak:
+  en: List of read-speak
+  es: Lista de leer-hablar
+Settings:
+  en: Settings
+  es: Ajustes
+Select homework:
+  en: Select homework
+  es: Seleccionar tarea
+Error synthesizing audio:
+  en: Error synthesizing audio
+  es: Error al sintetizar audio
+Name changed!:
+  en: Name changed!
+  es: ¡Nombre cambiado!
+Password changed!:
+  en: Password changed!
+  es: ¡Contraseña cambiada!
+Your ID:
+  en: Your ID
+  es: Tu DNI
+Request from:
+  en: Request from
+  es: Solicitud de
+to manage your account, Respond yes to accept:
+  en: to manage your account, Respond yes to accept
+  es: para administrar su cuenta, responda yes para aceptar
+Request sent. Accept from the other device:
+  en: Request sent. Accept from the other device
+  es: Solicitud enviada. Aceptar desde el otro dispositivo
+Select child to remove:
+  en: Select Member to remove
+  es: Seleccionar Miembro para eliminar
+addded succesfully!:
+  en: addded succesfully!
+  es: ¡agregado exitosamente!
+removed succesfully!:
+  en: removed succesfully!
+  es: eliminado con éxito!
+Current language:
+  en: Current language
+  es: Idioma actual
+Language code:
+  en: "en: English"
+  es: "es: Spanish"
+There are no vocabularies to show:
+  en: There are no vocabularies to show
+  es: No hay vocabularios que mostrar
+Language settings:
+  en: Language settings
+  es: Ajustes de idioma
+Select a homework to delete:
+  en: List of homeworks
+  es: Lista de tareas
+Insert a valid OpenAI API here:
+  en: Insert a valid OpenAI API here
+  es: Inserte una API de OpenAI valida aqui
+Mathematic homeworks:
+  en: Mathematic homeworks
+  es: Tareas de Matemáticas
+Finished:
+  en: Finished
+  es: Terminado
+Well done:
+  en: Well done
+  es: Bien hecho
+That is not correct:
+  en: That is not correct
+  es: Eso no esta bien
+Progress:
+  en: Progress
+  es: Progreso
+Correct answer:
+  en: Correct answer
+  es: Respuesta correcta
+What is:
+  en: What is
+  es: Cuanto es
+Score:
+  en: Score
+  es: Puntaje
+Total:
+  en: Total
+  es: Total
+User:
+  en: Username
+  es: Nombre de usuario
+Insert YouTube URL:
+  en: Insert YouTube URL
+  es: Inserte YouTube URL
+YouTube downloader assistant:
+  en: YouTube downloader assistant
+  es: Asistente de descargas de YouTube
+The video/audio can not be downloaded:
+  en: The video/audio can not be downloaded
+  es: El video/audio no puede ser descargado
+Select file type:
+  en: Select file type
+  es: Seleccione el tipo de archivo
+Select file settings:
+  en: Generate download link
+  es: Generar link de descarga
+Select framerate:
+  en: Select framerate
+  es: Seleccione framerate
+Analyze URL:
+  en: Convert
+  es: Convertir
+Download:
+  en: Download
+  es: Descargar
+Send the YouTube Link:
+  en: Send the YouTube Link
+  es: Envie el link de YouTube
+Select the file type:
+  en: Select the file type
+  es: Seleccione el tipo de archivo
+Select audio bitrate:
+  en: Select audio bitrate
+  es: Seleccione bitrate del audio
+Select framerate:
+  en: Select framerate
+  es: Seleccione framerate
+AI Image Generator:
+  en: AI Image Generator
+  es: IA Generador de imagenes
+Insert prompt in english:
+  en: Insert prompt in english
+  es: Inserte un prompt en ingles
+Select number or images:
+  en: Select number or images
+  es: Seleccione numero de imagenes
+Generate images:
+  en: Generate images
+  es: Generar imágenes
+Error generating image:
+  en: Error generating image
+  es: Error generando imagen
+File size exceeded, download the file here:
+  en: File size exceeded, download the file here
+  es: Se excedió el tamaño del archivo, descargue el archivo aquí
+Image to text (OCR):
+  en: Image to text (OCR)
+  es: Imagen a texto (OCR)
+write a four words sentence with this word:
+  en: 'write four words sentence with this word:'
+  es: 'escribe una oracion de 4 palabras con esta palabra:'
+ChatGPT prompt:
+  en: ChatGPT prompt
+  es: ChatGPT prompt
+Deleted:
+  en: Deleted
+  es: Eliminado
+AI Teacher assistant:
+  en: AI Teacher assistant
+  es: IA Profesor asistente
+Openai token:
+  en: Openai token
+  es: Openai token
+Azure speechkey:
+  en: Azure speechkey
+  es: Azure speechkey
+Azure region:
+  en: Azure region
+  es: Azure region
+Save credentials:
+  en: Save credentials
+  es: Guardar credenciales
+Delete credentials:
+  en: Delete credentials
+  es: Eliminar credenciales
+Delete all my data:
+  en: Delete all my data
+  es: Eliminar toda mi informacion
+All data will be deteted, this operation can not be undone, are you sure:
+  en: All data will be deteted, this operation can not be undone, are you sure
+  es: Toda la informacion sera eliminada, esta operacion no puede ser revertida, estas seguro
+Confirm to delete:
+  en: Confirm to delete
+  es: Confirmar eliminar
+Insert ChatGPT prompt to create write a sentence:
+  en: Insert ChatGPT prompt to create write a sentence
+  es: Inserte el prompt de ChatGPT para crear escribir una oración
+Share credentials with children:
+  en: Share credentials with members
+  es: Compartir credenciales con Miembros
+Blocked commands for children:
+  en: Blocked commands for members
+  es: Comandos bloqueados para los Miembros
+Update blocked commands list:
+  en: Update blocked commands list
+  es: Actualizar lista de comandos bloqueados
+Update list:
+  en: Update list
+  es: Actualizar lista
+No mathematic operations selected:
+  en: No mathematic operations selected
+  es: No operaciones matematicas seleccionadas
+Audio lenght limit is 15 seconds:
+  en: Audio lenght limit is 15 seconds
+  es: Longitud de audio limite es 15 segundos
+Show advanced options:
+  en: Show advanced options
+  es: Mostrar opciones avanzadas
+Running engines:
+  en: Running engines
+  es: Corriendo motores
+Large process engine:
+  en: Large process engine
+  es: Motor de procesos largos
+Short process engine:
+  en: Short process engine
+  es: Motor de procesos cortos
+Please restart the container:
+  en: Please, restart the container
+  es: Por favor, reinicie el container
+You have no childs, to add a child send /add_child using telegram:
+  en: You have no members, to add a member send /add_member using Telegram
+  es: No tienes miembros, para agregar un miembro envia /add_member usando Telegram

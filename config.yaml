@@ -1,0 +1,14 @@
+cookie:
+  expiry_days: 30
+  key: zonynnyakxjtein
+  name: random_cookie_name
+credentials:
+  usernames:
+preauthorized:
+  emails:
+  - name@domain.com
+telegram:
+  token: 
+engines:
+  large: 1
+  short: 1

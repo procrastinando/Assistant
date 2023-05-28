@@ -1,0 +1,237 @@
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 275, in main
+    response = requests.get(url)
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/site-packages/requests/api.py", line 73, in get
+    return request("get", url, params=params, **kwargs)
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/site-packages/requests/sessions.py", line 587, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/site-packages/requests/sessions.py", line 701, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/site-packages/requests/adapters.py", line 487, in send
+    resp = conn.urlopen(
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/site-packages/urllib3/connectionpool.py", line 703, in urlopen
+    httplib_response = self._make_request(
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/site-packages/urllib3/connectionpool.py", line 449, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 3, in raise_from
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/site-packages/urllib3/connectionpool.py", line 444, in _make_request
+    httplib_response = conn.getresponse()
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/http/client.py", line 1377, in getresponse
+    response.begin()
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/http/client.py", line 320, in begin
+    version, status, reason = self._read_status()
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/http/client.py", line 281, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/socket.py", line 704, in readinto
+    return self._sock.recv_into(b)
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/ssl.py", line 1242, in recv_into
+    return self.read(nbytes, buffer)
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/ssl.py", line 1100, in read
+    return self._sslobj.read(len, buffer)
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 275, in main
+    response = requests.get(url)
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/site-packages/requests/api.py", line 73, in get
+    return request("get", url, params=params, **kwargs)
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/site-packages/requests/sessions.py", line 587, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/site-packages/requests/sessions.py", line 701, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/site-packages/requests/adapters.py", line 487, in send
+    resp = conn.urlopen(
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/site-packages/urllib3/connectionpool.py", line 703, in urlopen
+    httplib_response = self._make_request(
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/site-packages/urllib3/connectionpool.py", line 449, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 3, in raise_from
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/site-packages/urllib3/connectionpool.py", line 444, in _make_request
+    httplib_response = conn.getresponse()
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/http/client.py", line 1377, in getresponse
+    response.begin()
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/http/client.py", line 320, in begin
+    version, status, reason = self._read_status()
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/http/client.py", line 281, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/socket.py", line 704, in readinto
+    return self._sock.recv_into(b)
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/ssl.py", line 1242, in recv_into
+    return self.read(nbytes, buffer)
+  File "/home/carlos/anaconda3/envs/assistant/lib/python3.9/ssl.py", line 1100, in read
+    return self._sslobj.read(len, buffer)
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 626, in <module>
+    main()
+  File "/home/carlos/assistant/run_telegram.py", line 276, in main
+    if resp['result']:
+KeyError: 'result'
+Traceback (most recent call last):
+  File "/home/carlos/assistant/run_telegram.py", line 629, in <module>
+  File "/home/carlos/assistant/run_telegram.py", line 279, in main
+    for i in resp['result']:
+KeyError: 'result'
