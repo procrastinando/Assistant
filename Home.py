@@ -183,7 +183,10 @@ if __name__ == '__main__':
     with open('config.yaml', 'r') as file:
         config = yaml.safe_load(file)
 
-    if len(config['credentials']['usernames']) < 1:
+    if config['telegram']['token']:
+        main()
+
+    else:
         st.title("Set up bot")
         
         tt = st.text_input("Set Telegram bot Token")
@@ -201,6 +204,3 @@ if __name__ == '__main__':
                 yaml.dump(config, file)
 
             st.write("Please, restart the container")
-
-    else:
-        main()
