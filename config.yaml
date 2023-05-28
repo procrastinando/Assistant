@@ -1,3 +1,6 @@
+admin:
+  id: 
+  url: 
 cookie:
   expiry_days: 30
   key: zonynnyakxjtein
@@ -6,7 +9,6 @@ credentials:
   usernames:
 preauthorized:
   emails:
-  - name@domain.com
 telegram:
   token: 
 engines:

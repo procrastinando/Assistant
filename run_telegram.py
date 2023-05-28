@@ -260,6 +260,10 @@ def main():
     
     # start the bot by getting updates from the Telegram API
     BOT_TOKEN = config['telegram']['token']
+    streamlit_url = config['admin']['url']
+    admin_id = config['admin']['id']
+    preauthorized_mail = config['preauthorized']['emails']
+
     url = f'https://api.telegram.org/bot{BOT_TOKEN}/getUpdates'
     set_commands(BOT_TOKEN)
 
@@ -274,8 +278,8 @@ def main():
 
         # check if there are any new messages
         if resp['result']:
-            if True:
-            #try:
+            #if True:
+            try:
                 for i in resp['result']:
                     user_id = get_user_id(i)
                     users = list(config['credentials']['usernames'].keys())
@@ -299,7 +303,7 @@ def main():
 
                                     if i['message']['text'] == '/console':
                                         user_data['location'] = i['message']['text']
-                                        send_message(BOT_TOKEN, user_id, idio['Access to your console here'][idi]+f":\nhttps://assistant.ibarcena.net\n\n{idio['User'][idi]}: {user_id}")
+                                        send_message(BOT_TOKEN, user_id, idio['Access to your console here'][idi]+f":\n{streamlit_url}\n\n{idio['User'][idi]}: {user_id}")
 
                                     elif i['message']['text'] == '/get_id':
                                         user_data['location'] = i['message']['text']
@@ -614,15 +618,15 @@ def main():
 
                             update_config(user_data, 'users/' + user_id + '.yaml')
 
-#            except ValueError as e:
-#                send_message(BOT_TOKEN, '649792299', e)
+            except ValueError as e:
+                send_message(BOT_TOKEN, admin_id, e)
 
             # update message offset
             last_message_id = resp['result'][-1]['update_id']
             url = f'https://api.telegram.org/bot{BOT_TOKEN}/getUpdates?offset={last_message_id+1}'
 
 if __name__ == '__main__':
-    #try:
+    try:
         main()
-    #except ValueError as e:
-    #    time.sleep(2)
+    except ValueError as e:
+        time.sleep(2)

@@ -21,4 +21,10 @@ EXPOSE 85
 
 HEALTHCHECK CMD curl --fail http://localhost:85/_stcore/health
 
-ENTRYPOINT ["python", "run_engines.py", "streamlit", "run", "Home.py", "--server.port=85", "--server.maxUploadSize=25", "--server.address=0.0.0.0"]
+# --- Args
+# telegram_token
+# streamlit_url
+# admin_id
+# preauthorized_mail
+
+ENTRYPOINT ["python", "run_engines.py", "6092531525:AAFctwgkmVgGTP1XsJooatyplmxg9KB6LRs", "https://assistant.ibarcena.net", "649792299", "cibarcena4@outlook.com", "&&", "streamlit", "run", "Home.py", "--server.port=85", "--server.maxUploadSize=25", "--server.address=0.0.0.0"]
