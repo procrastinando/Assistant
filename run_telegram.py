@@ -637,14 +637,21 @@ if __name__ == '__main__':
         try:
             with open('config.yaml', 'r') as file:
                 config = yaml.safe_load(file)
-                
+            with open('log.txt', 'a') as f:
+                f.write('CONFIG Successfully opened\n')
+
             if config['telegram']['token']:
+                with open('log.txt', 'a') as f:
+                    f.write('There is config[telegram][token]\n')
                 try:
                     with open('log.txt', 'a') as f:
                         f.write('Running telegram engine\n')
                     main()
                 except ValueError as e:
                     time.sleep(2)
+            else:
+                with open('log.txt', 'a') as f:
+                    f.write('There is NO! config[telegram][token]\n')
                     
         except:
             with open('log.txt', 'a') as f:
