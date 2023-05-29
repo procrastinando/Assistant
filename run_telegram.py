@@ -627,11 +627,11 @@ def main():
 
 if __name__ == '__main__':
     
-    # for dir in ['miniapps/languages/images/', 'miniapps/youtube/', 'users/']:
-    #     try:
-    #         os.mkdir(dir)
-    #     except:
-    #         pass
+    for dir in ['miniapps/languages/images/', 'miniapps/youtube/', 'users/']:
+        try:
+            os.mkdir(dir)
+        except:
+            pass
     
     while True:
         try:
@@ -640,11 +640,13 @@ if __name__ == '__main__':
                 
             if config['telegram']['token']:
                 try:
-                    print("Running telegram engine")
+                    with open('log.txt', 'a') as f:
+                        f.write('Running telegram engine\n')
                     main()
                 except ValueError as e:
                     time.sleep(2)
                     
         except:
-            print("Waiting 5 seconds")
+            with open('log.txt', 'a') as f:
+                f.write('Waiting 5 seconds\n')
             time.sleep(5)
