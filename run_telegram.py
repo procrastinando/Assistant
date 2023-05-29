@@ -262,7 +262,6 @@ def main():
     BOT_TOKEN = config['telegram']['token']
     streamlit_url = config['admin']['url']
     admin_id = config['admin']['id']
-    preauthorized_mail = config['preauthorized']['emails']
 
     url = f'https://api.telegram.org/bot{BOT_TOKEN}/getUpdates'
     set_commands(BOT_TOKEN)
@@ -273,13 +272,14 @@ def main():
         delete_old_files()
         process_extra(BOT_TOKEN)
 
-        response = requests.get(url)
-        resp = response.json()
+        #if True:
+        try:
+            response = requests.get(url)
+            resp = response.json()
 
-        # check if there are any new messages
-        if resp['result']:
-            #if True:
-            try:
+            # check if there are any new messages
+            if resp['result']:
+
                 for i in resp['result']:
                     user_id = get_user_id(i)
                     users = list(config['credentials']['usernames'].keys())
@@ -618,12 +618,12 @@ def main():
 
                             update_config(user_data, 'users/' + user_id + '.yaml')
 
-            except ValueError as e:
-                send_message(BOT_TOKEN, admin_id, e)
-
             # update message offset
             last_message_id = resp['result'][-1]['update_id']
             url = f'https://api.telegram.org/bot{BOT_TOKEN}/getUpdates?offset={last_message_id+1}'
+
+        except ValueError as e:
+            send_message(BOT_TOKEN, admin_id, e)
 
 if __name__ == '__main__':
     
