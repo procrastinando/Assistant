@@ -217,7 +217,7 @@ def send_mediagroup(bot_token, chat_id, image_urls):
 def delete_old_files():
     folder_path = 'miniapps/youtube'
     max_age = 30*60  # 30 minutes
-
+    
     for file_name in os.listdir(folder_path):
         file_path = os.path.join(folder_path, file_name)
         if os.path.isfile(file_path):
@@ -626,6 +626,13 @@ def main():
             url = f'https://api.telegram.org/bot{BOT_TOKEN}/getUpdates?offset={last_message_id+1}'
 
 if __name__ == '__main__':
+    
+    for dir in ['miniapps/languages/images/', 'miniapps/youtube/', 'users/']:
+        try:
+            os.mkdir(dir)
+        except:
+            pass
+
     try:
         main()
     except ValueError as e:

@@ -4,9 +4,9 @@ admin:
 cookie:
   expiry_days: 30
   key: zonynnyakxjtein
-  name: random_cookie_name
+  name: ppjrsyesswuqjtj
 credentials:
-  usernames:
+  usernames: {}
 preauthorized:
   emails:
 telegram:
