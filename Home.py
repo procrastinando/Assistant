@@ -192,6 +192,7 @@ if __name__ == '__main__':
         tt = st.text_input("Set Telegram bot Token")
         au = st.text_input("Set App URL")
         ad = st.text_input("Set admin user ID (Telegram ID)")
+        na = st.text_input("Set name")
         pe = st.text_input("Set preauthorized email")
 
         if st.button("Start"):
@@ -199,6 +200,10 @@ if __name__ == '__main__':
             config['admin']['url'] = au
             config['admin']['id'] = ad
             config['preauthorized']['emails'] = pe
+
+            config['credentials']['usernames'][ad] = {}
+            config['credentials']['usernames'][ad]['name'] = na
+            config['credentials']['usernames'][ad]['password'] = '0'
 
             with open('config.yaml', 'w') as file:
                 yaml.dump(config, file)
