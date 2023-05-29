@@ -1,16 +1,19 @@
 admin:
-  id: 
-  url: 
+  id: null
+  url: null
 cookie:
   expiry_days: 30
   key: zonynnyakxjtein
   name: ppjrsyesswuqjtj
 credentials:
-  usernames: {}
-preauthorized:
-  emails:
-telegram:
-  token: 6092531525:AAFctwgkmVgGTP1XsJooatyplmxg9KB6LRs
+  usernames:
+    '649792299':
+      name: Carlos
+      password: '0'
 engines:
   large: 1
   short: 1
+preauthorized:
+  emails: null
+telegram:
+  token: 6092531525:AAFctwgkmVgGTP1XsJooatyplmxg9KB6LRs

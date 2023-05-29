@@ -101,10 +101,9 @@ def create_new_user(config, BOT_TOKEN, user_id, i):
     config['credentials']['usernames'][user_id] = {}
     config['credentials']['usernames'][user_id]['name'] = complete_name
     config['credentials']['usernames'][user_id]['password'] = '0'
-    welcome_message = f'Welcome {complete_name}!\nYour user ID is: {user_id}\nYou can set a /password to access to your console\nhttps://assistant.ibarcena.net'
-    with open('config.yaml', 'w') as file:
-        yaml.dump(config, file)
+    welcome_message = f"Welcome {complete_name}!\nYour user ID is: {user_id}\nYou can set a /password to access to your console\n{config['admin']['url']}"
 
+    update_config(config, 'config.yaml')
     send_message(BOT_TOKEN, user_id, welcome_message)
 
 def update_config(data, data_path):
@@ -148,7 +147,7 @@ def send_settings_keyboard(BOT_TOKEN, chat_id, text):
     headers = {"Content-Type": "application/json"}
 
     keyboard = {
-        'keyboard': [['/console'], ['/get_id'], ['/language'], ['/password'], ['/change_name'], ['/add_child'], ['/remove_child']],
+        'keyboard': [['/console'], ['/get_id'], ['/language'], ['/password'], ['/change_name'], ['/add_member'], ['/remove_member']],
         'one_time_keyboard': True,
         'resize_keyboard': True
     }
@@ -271,7 +270,6 @@ def main():
 
     # Start the loop looking for new messages
     while True:
-        time.sleep(0.5)
         delete_old_files()
         process_extra(BOT_TOKEN)
 
@@ -330,11 +328,11 @@ def main():
                                         user_data['location'] = i['message']['text']
                                         send_message(BOT_TOKEN, user_id, idio['Type a new password'][idi])
 
-                                    elif i['message']['text'] == '/add_child':
+                                    elif i['message']['text'] == '/add_member':
                                         user_data['location'] = i['message']['text']
                                         send_message(BOT_TOKEN, user_id, idio["Insert the child's ID"][idi])
 
-                                    elif i['message']['text'] == '/remove_child':
+                                    elif i['message']['text'] == '/remove_member':
                                         user_data['location'] = i['message']['text']
                                         reply_markup = []
                                         for a in user_data['childs']:
@@ -492,10 +490,10 @@ def main():
                                         update_config(config, 'config.yaml')
                                         send_message(BOT_TOKEN, user_id, f"{idio['Password changed!'][idi]}\n{idio['Your ID'][idi]}: {user_id}\n{idio['Access to your console here'][idi]}: http://192.168.50.182:8501")
 
-                                    elif user_data['location'] == '/add_child':
-                                        reply_markup = [[{'text': 'yes', 'callback_data': f"{user_id}&{1}"}]]
-                                        send_inline(BOT_TOKEN, i['message']['text'], f"{idio['Request from'][idi]} {user_id} {idio['to manage your account, Respond yes to accept'][idi]}", reply_markup)
+                                    elif user_data['location'] == '/add_member':
+                                        reply_markup = [[{'text': 'yes', 'callback_data': f"{user_id}&{1}"}]] 
                                         send_message(BOT_TOKEN, user_id, idio["Request sent. Accept from the other device"][idi])
+                                        send_inline(BOT_TOKEN, i['message']['text'], f"{idio['Request from'][idi]} {user_id} {idio['to manage your account, Respond yes to accept'][idi]}", reply_markup)
 
                             elif 'callback_query' in i:
 
@@ -606,17 +604,22 @@ def main():
                                     vocabulary = ', '.join(vocabulary)
                                     send_message(BOT_TOKEN, user_id, vocabulary)
 
-                                # If manage a child
-                                elif "&" in i['callback_query']['data']:
+                                # If add child
+                                elif "&" in i['callback_query']['data']: # user_id&1
                                     cb_data = i['callback_query']['data'].split("&")
 
                                     if cb_data[1] == '1':
                                         manager_id = open_data(cb_data[0])
                                         manager_id['childs'].append(user_id)
-                                        update_config(manager_id, 'users/' + cb_data[0] + '.yaml')
+
+                                        if user_id != cb_data[0]:
+                                            update_config(manager_id, 'users/' + cb_data[0] + '.yaml')
+                                        else:
+                                            user_data = manager_id
+                                            
                                         send_message(BOT_TOKEN, cb_data[0], f"{user_id} {idio['addded succesfully!'][idi]}")
                                     elif cb_data[1] == '0':
-                                        user_data['childs'].remove(cb_data[0])
+                                        user_data['childs'].remove(int(cb_data[0]))
                                         send_message(BOT_TOKEN, user_id, f"{user_id} {idio['removed succesfully!'][idi]}")
 
                             update_config(user_data, 'users/' + user_id + '.yaml')
@@ -642,5 +645,6 @@ if __name__ == '__main__':
             with open('log.txt', 'a') as f:
                 f.write('Waiting 5 seconds\n')
             time.sleep(5)
+
 
 

@@ -1,0 +1,55 @@
+azure: {}
+blocked: []
+childs:
+- '649792299'
+coins: 0.0
+credentials:
+  azure: {}
+  share: false
+idiom: en
+location: /remove_member
+miniapps:
+  listen-write:
+    answer: 0
+    chatgpt: false
+    current_request: 0
+    ex_rate: 10.0
+    fault_penalty: -1
+    homework: {}
+    homework_conf: {}
+    target_score: 50.0
+  mathematics:
+    answer: 0
+    current_score: 0.0
+    ex_rate: 20.0
+    fault_penalty: -1
+    homework:
+      division:
+        lower_num: 2
+        upper_num: 10
+      multiplication:
+        lower_num: 2
+        upper_num: 10
+      rest:
+        lower_num: 4
+        upper_num: 32
+      sum:
+        lower_num: 4
+        upper_num: 32
+    operations: []
+    target_score: 50.0
+  read-speak:
+    current_request: '0'
+    difficulty: 2.0
+    ex_rate: 500.0
+    homework: {}
+    homework_lang: {}
+    t2v-model: google
+    target_score: 50.0
+    v2t-model: whisper
+    voice-speed: 0.75
+    whisper-size: base
+  youtube:
+    file: {}
+    request:
+      url: https://www.youtube.com/shorts/WAWQluwU0yM
