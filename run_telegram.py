@@ -632,8 +632,13 @@ if __name__ == '__main__':
             os.mkdir(dir)
         except:
             pass
-
-    try:
-        main()
-    except ValueError as e:
-        time.sleep(2)
+    
+    with open('config.yaml', 'r') as file:
+        tt = yaml.safe_load(file)['telegram']['token']
+    if tt:
+        try:
+            main()
+        except ValueError as e:
+            time.sleep(2)
+    else:
+        time.sleep(5)
