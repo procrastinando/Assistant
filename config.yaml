@@ -10,7 +10,7 @@ credentials:
 preauthorized:
   emails:
 telegram:
-  token: 
+  token: 6092531525:AAFctwgkmVgGTP1XsJooatyplmxg9KB6LRs
 engines:
   large: 1
   short: 1

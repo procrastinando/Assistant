@@ -263,6 +263,9 @@ def main():
     streamlit_url = config['admin']['url']
     admin_id = config['admin']['id']
 
+    with open('log.txt', 'a') as f:
+        f.write('CONFIG successfully opened\n')
+
     url = f'https://api.telegram.org/bot{BOT_TOKEN}/getUpdates'
     set_commands(BOT_TOKEN)
 
@@ -626,34 +629,18 @@ def main():
             send_message(BOT_TOKEN, admin_id, e)
 
 if __name__ == '__main__':
-    
     for dir in ['miniapps/languages/images/', 'miniapps/youtube/', 'users/']:
         try:
             os.mkdir(dir)
         except:
             pass
-    
+
     while True:
         try:
-            with open('config.yaml', 'r') as file:
-                config = yaml.safe_load(file)
-            with open('log.txt', 'a') as f:
-                f.write('CONFIG Successfully opened\n')
-
-            if config['telegram']['token']:
-                with open('log.txt', 'a') as f:
-                    f.write('There is config[telegram][token]\n')
-                try:
-                    with open('log.txt', 'a') as f:
-                        f.write('Running telegram engine\n')
-                    main()
-                except ValueError as e:
-                    time.sleep(2)
-            else:
-                with open('log.txt', 'a') as f:
-                    f.write('There is NO! config[telegram][token]\n')
-                    
+            main()
         except:
             with open('log.txt', 'a') as f:
                 f.write('Waiting 5 seconds\n')
             time.sleep(5)
+
+
