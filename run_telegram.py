@@ -627,18 +627,21 @@ def main():
 
 if __name__ == '__main__':
     
-    for dir in ['miniapps/languages/images/', 'miniapps/youtube/', 'users/']:
-        try:
-            os.mkdir(dir)
-        except:
-            pass
+    # for dir in ['miniapps/languages/images/', 'miniapps/youtube/', 'users/']:
+    #     try:
+    #         os.mkdir(dir)
+    #     except:
+    #         pass
     
     with open('config.yaml', 'r') as file:
-        tt = yaml.safe_load(file)['telegram']['token']
-    if tt:
+        config = yaml.safe_load(file)
+        
+    if config['telegram']['token']:
         try:
+            print("Running telegram engine")
             main()
         except ValueError as e:
             time.sleep(2)
     else:
+        print(config)
         time.sleep(5)

@@ -7,7 +7,7 @@ try:
         config = yaml.safe_load(file)
 
     # Run commands
-    commands = [["streamlit", "run", "Home.py", "--server.port=8501", "--server.maxUploadSize=25"], ['nohup', 'python', 'run_telegram.py']]
+    commands = [['nohup', 'python', 'run_telegram.py']]
 
     for i in range(int(config['engines']['large'])):
         commands.append(['python', 'run_extra.py', 'large'])
