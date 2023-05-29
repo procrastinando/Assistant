@@ -633,15 +633,18 @@ if __name__ == '__main__':
     #     except:
     #         pass
     
-    with open('config.yaml', 'r') as file:
-        config = yaml.safe_load(file)
-        
-    if config['telegram']['token']:
+    while True:
         try:
-            print("Running telegram engine")
-            main()
-        except ValueError as e:
-            time.sleep(2)
-    else:
-        print(config)
-        time.sleep(5)
+            with open('config.yaml', 'r') as file:
+                config = yaml.safe_load(file)
+                
+            if config['telegram']['token']:
+                try:
+                    print("Running telegram engine")
+                    main()
+                except ValueError as e:
+                    time.sleep(2)
+                    
+        except:
+            print("Waiting 5 seconds")
+            time.sleep(5)
