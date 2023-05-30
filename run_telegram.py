@@ -2,6 +2,7 @@ import requests
 import json
 import yaml
 import time
+import datetime
 import os
 import streamlit_authenticator as stauth
 from pytube import YouTube
@@ -25,7 +26,7 @@ def create_new_user(config, BOT_TOKEN, user_id, i):
     user_data = {
         'idiom': i['message']['from']['language_code'],
         'credentials': {
-            'share': False,
+            'share': [],
             'azure': {}
         },
         'blocked': [],
@@ -253,34 +254,19 @@ def process_extra(BOT_TOKEN):
     with open('extra.yaml', 'w') as file:
         yaml.dump(extra, file)
 
-def main():
-    with open('config.yaml', 'r') as file:
-        config = yaml.safe_load(file)
-    
-    # start the bot by getting updates from the Telegram API
-    BOT_TOKEN = config['telegram']['token']
-    streamlit_url = config['admin']['url']
-    admin_id = config['admin']['id']
-
-    with open('log.txt', 'a') as f:
-        f.write('CONFIG successfully opened\n')
-
-    url = f'https://api.telegram.org/bot{BOT_TOKEN}/getUpdates'
+def main(BOT_TOKEN, streamlit_url, admin_id):
     set_commands(BOT_TOKEN)
+    url = f'https://api.telegram.org/bot{BOT_TOKEN}/getUpdates'
 
-    # Start the loop looking for new messages
     while True:
         delete_old_files()
         process_extra(BOT_TOKEN)
+        response = requests.get(url)
+        resp = response.json()
 
-        #if True:
-        try:
-            response = requests.get(url)
-            resp = response.json()
-
-            # check if there are any new messages
-            if resp['result']:
-
+        # check if there are any new messages
+        if resp['result']:
+            try:
                 for i in resp['result']:
                     user_id = get_user_id(i)
                     users = list(config['credentials']['usernames'].keys())
@@ -500,7 +486,7 @@ def main():
                                 # Youtube
                                 if "*" in i['callback_query']['data']:
                                     cb_data = i['callback_query']['data'].split("*")
- 
+
                                     # 1. the resolution/audio has been chosen, the bitrate will be sent
                                     if len(cb_data) == 2:
                                         user_data['miniapps']['youtube']['file']['resolution'] = cb_data[1]
@@ -619,32 +605,37 @@ def main():
                                             
                                         send_message(BOT_TOKEN, cb_data[0], f"{user_id} {idio['addded succesfully!'][idi]}")
                                     elif cb_data[1] == '0':
-                                        user_data['childs'].remove(int(cb_data[0]))
+                                        user_data['childs'].remove(cb_data[0])
                                         send_message(BOT_TOKEN, user_id, f"{user_id} {idio['removed succesfully!'][idi]}")
 
                             update_config(user_data, 'users/' + user_id + '.yaml')
+
+            except ValueError as e:
+                send_message(BOT_TOKEN, admin_id, e)
 
             # update message offset
             last_message_id = resp['result'][-1]['update_id']
             url = f'https://api.telegram.org/bot{BOT_TOKEN}/getUpdates?offset={last_message_id+1}'
 
-        except ValueError as e:
-            send_message(BOT_TOKEN, admin_id, e)
-
 if __name__ == '__main__':
-    for dir in ['miniapps/languages/images/', 'miniapps/youtube/', 'users/']:
+    for dir in ['miniapps/languages/images/', 'miniapps/youtube/', 'miniapps/voice2text/', 'users/']:
         try:
             os.mkdir(dir)
         except:
             pass
 
+    with open('config.yaml', 'r') as file:
+        config = yaml.safe_load(file)
+    
+    # start the bot by getting updates from the Telegram API
+    BOT_TOKEN = config['telegram']['token']
+    streamlit_url = config['admin']['url']
+    admin_id = config['admin']['id']
+
     while True:
         try:
-            main()
+            main(BOT_TOKEN, streamlit_url, admin_id)
         except:
             with open('log.txt', 'a') as f:
-                f.write('Waiting 5 seconds\n')
-            time.sleep(5)
-
-
-
+                f.write(f"{datetime.datetime.now()}: Network error\n")
+            time.sleep(2)

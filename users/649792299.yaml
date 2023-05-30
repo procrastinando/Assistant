@@ -5,9 +5,9 @@ childs:
 coins: 0.0
 credentials:
   azure: {}
-  share: false
-idiom: en
-location: /remove_member
+  share: []
+idiom: es
+location: /youtube
 miniapps:
   listen-write:
     answer: 0
@@ -50,6 +50,27 @@ miniapps:
     voice-speed: 0.75
     whisper-size: base
   youtube:
-    file: {}
+    file:
+      bitrate: 48kbps
+      resolution: 144p
+      task:
+        144p:
+        - 25
+        - 6
+        240p:
+        - 25
+        360p:
+        - 25
+        480p:
+        - 25
+        720p:
+        - 25
+        audio:
+        - 48kbps
+        - 128kbps
+        - 50kbps
+        - 70kbps
+        - 160kbps
     request:
-      url: https://www.youtube.com/shorts/WAWQluwU0yM
+      fname: "Pepita 'Nuggets'   Animaci\xF3n sobre los efectos de las drogas"
+      url: https://youtu.be/0WaYLWDPMB0

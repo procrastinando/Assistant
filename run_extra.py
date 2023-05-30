@@ -52,10 +52,10 @@ def run_short(BOT_TOKEN, extra):
             put_extra(f"{extra_data[0]}|message|{text}")
 
         elif 'youtube' in extra_data:
+            cb_data = extra_data[4].split("*") # cb_data => user_id*resolution*bitrate*fps
             take_extra(extra, 'short', m)
             size_exceeded = f"{idio['File size exceeded, download the file here'][idi]}:\nhttps://assistant.ibarcena.net/Youtube"
             del_list = ['miniapps/youtube/'+cb_data[0]+'a', 'miniapps/youtube/'+cb_data[0]+'v']
-            cb_data = extra_data[4].split("*") # cb_data => user_id*resolution*bitrate*fps
 
             if len(cb_data) == 4: # there is fps information
                 yt = YouTube(user_data['miniapps']['youtube']['request']['url']).streams
@@ -100,26 +100,28 @@ def main(BOT_TOKEN, arg1):
         with open('extra.yaml', 'r') as file:
             extra = yaml.safe_load(file)
 
-        if arg1 == 'short':
-            try:
-                run_short(BOT_TOKEN, extra)
-            except:
-                pass # There are no new short jobs
+        # if arg1 == 'short':
+        #     try:
+        #         run_short(BOT_TOKEN, extra)
+        #     except:
+        #         pass # There are no new short jobs
 
-        else:
-            try:
-                run_large(BOT_TOKEN, extra)
-            except:
-                try:
-                    run_short(BOT_TOKEN, extra)
-                except:
-                    pass # there are no large jobs nor short
+        # else:
+        #     try:
+        #         run_large(BOT_TOKEN, extra)
+        #     except:
+        #         try:
+        #             run_short(BOT_TOKEN, extra)
+        #         except:
+        #             pass # there are no large jobs nor short
+
+        run_short(BOT_TOKEN, extra)
 
 if __name__ == '__main__':
 
     with open('config.yaml', 'r') as file:
         BOT_TOKEN = yaml.safe_load(file)['telegram']['token']
 
-    arg1 = sys.argv[1]
+    #arg1 = sys.argv[1]
 
-    main(BOT_TOKEN, arg1) # 'short' options: short, large. If short will try only short time required jobs. If large, will try to find large jobs first, if not, short jobs
+    main(BOT_TOKEN, 'large') # 'short' options: short, large. If short will try only short time required jobs. If large, will try to find large jobs first, if not, short jobs

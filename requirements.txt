@@ -1,6 +1,3 @@
-#torch
-#torchvision
-#torchaudio
 faster-whisper
 streamlit
 streamlit-authenticator
@@ -11,3 +8,5 @@ pytesseract
 gTTS
 httpx
 pytube
+deep-translator
+srt

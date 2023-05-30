@@ -7,7 +7,7 @@ try:
         config = yaml.safe_load(file)
 
     # Run commands
-    commands = [['nohup', 'python', 'run_telegram.py']]
+    commands = [['nohup', 'python', 'run_telegram.py'], ['nohup', 'python', 'run_stats.py']]
 
     for i in range(int(config['engines']['large'])):
         commands.append(['python', 'run_extra.py', 'large'])

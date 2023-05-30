@@ -338,8 +338,8 @@ Share credentials with children:
   en: Share credentials with members
   es: Compartir credenciales con Miembros
 Blocked commands for children:
-  en: Blocked commands for members
-  es: Comandos bloqueados para los Miembros
+  en: Blocked commands for the member
+  es: Comandos bloqueados para el miembro
 Update blocked commands list:
   en: Update blocked commands list
   es: Actualizar lista de comandos bloqueados
@@ -370,4 +370,21 @@ Please restart the container:
 You have no childs, to add a child send /add_child using telegram:
   en: You have no members, to add a member send /add_member using Telegram
   es: No tienes miembros, para agregar un miembro envia /add_member usando Telegram
-  
+There are no read and speak homeworks:
+  en: There are no read and speak homeworks
+  es: No hay tareas de leer y hablar
+Voice to Text:
+  en: Voice to Text
+  es: Voz a texto
+Select audio to process:
+  en: Select audio to process
+  es: Seleccionar audio para procesar
+Select beam size (in seconds) zero means no beam:
+  en: Select beam size (in seconds) zero means no beam
+  es: Seleccione tamano de beam (en segundos) cero significa sin beam
+Start:
+  en: Start
+  es: Empezar
+Select language to translate, no selection, no translation:
+  en: Select languages to translate, no selection, no translation
+  es: Seleccione idiomas a traducir, no iisiomas seleccionados, no habra traduccion

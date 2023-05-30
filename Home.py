@@ -3,6 +3,7 @@ import streamlit_authenticator as stauth
 import yaml
 from yaml.loader import SafeLoader
 import os
+import pandas as pd
 
 from run_telegram import open_data, update_config
 
@@ -66,7 +67,7 @@ def start(authenticator):
     with open('config.yaml', 'r') as file:
         usernames = yaml.safe_load(file)['credentials']['usernames']
 
-    if user_data['childs'] != None:
+    if user_data['childs'] != []:
         col1, col2 = st.columns([1, 1])
         with col1:
             i = st.selectbox(f"{idio['Child'][idi]}:", user_data['childs'])
@@ -90,7 +91,10 @@ def start(authenticator):
                 if child_data['miniapps']['read-speak']['homework'][j][k]['score'] > child_data['miniapps']['read-speak']['target_score']:
                     languages_current = languages_current + 1
                 languages_target = languages_target + 1
-        languages_current = round(languages_current / languages_target * 100, 2)
+        try:
+            languages_current = round(languages_current / languages_target * 100, 2)
+        except:
+            languages_current = '0.0%'
         languages_coins = round(languages_target * child_data['miniapps']['read-speak']['target_score'] / child_data['miniapps']['read-speak']['ex_rate'], 2)
         st.write(f"{idio['Read and speak'][idi]}: {languages_current}%   ▶️   Expected coins: {languages_coins}")
 
@@ -99,7 +103,10 @@ def start(authenticator):
         for l in list(child_data['miniapps']['listen-write']['homework_conf'].keys()):
             lw_current = lw_current + child_data['miniapps']['listen-write']['homework_conf'][l]['score']
             number_lwhw = number_lwhw + 1
-        lw_current = lw_current / number_lwhw
+        try:
+            lw_current = lw_current / number_lwhw
+        except:
+            lw_current = 0.0
         lw_current = round(lw_current / child_data['miniapps']['listen-write']['target_score'] * 100, 2)
         lw_coins = round(number_lwhw * child_data['miniapps']['listen-write']['target_score'] / child_data['miniapps']['listen-write']['ex_rate'], 2)
         st.write(f"{idio['Listen and write'][idi]}: {lw_current}%   ▶️   Expected coins: {lw_coins}")
@@ -139,16 +146,17 @@ def start(authenticator):
                 user_data['azure']['region'] = azure_region
                 update_config(user_data, 'users/'+st.session_state["username"]+'.yaml')
 
-        share_credentials = st.multiselect(idio['Share credentials with children'][idi], user_data['childs'], user_data['credentials']['share'])
-        if st.button(idio['Update list'][idi]):
-            for child_id in user_data['childs']:
-                if child_id in share_credentials:
-                    user_data['credentials']['share'] = share_credentials
-                    update_childs_credentials(st.session_state["username"])
-                else:
-                    user_data['credentials']['share'] = share_credentials
-                    del_childs_credentials(st.session_state["username"])
-            update_config(user_data, 'users/'+st.session_state["username"]+'.yaml')
+        if user_data['childs'] != []:
+            share_credentials = st.multiselect(idio['Share credentials with children'][idi], user_data['childs'], user_data['credentials']['share'])
+            if st.button(idio['Update list'][idi]):
+                for child_id in user_data['childs']:
+                    if child_id in share_credentials:
+                        user_data['credentials']['share'] = share_credentials
+                        update_childs_credentials(st.session_state["username"])
+                    else:
+                        user_data['credentials']['share'] = share_credentials
+                        del_childs_credentials(st.session_state["username"])
+                update_config(user_data, 'users/'+st.session_state["username"]+'.yaml')
 
         # --- If admin 
         if st.session_state["username"] == '649792299':
@@ -168,6 +176,16 @@ def start(authenticator):
                 update_config(config, 'config.yaml')
                 st.write(idio['Please restart the container'][idi])
 
+            # Show the resources usage
+            range_time = st.select_slider("Select time range", options=['1 hour', '1 day', '1 week', '1 month', '1 year'])
+            range_time_dic = {'1 hour': 60, '1 day': 1440, '1 week': 10080, '1 month': 43200, '1 year': 525600}
+
+            data = pd.read_csv('system_stats.csv', names=['Timestamp', 'CPU Usage', 'Memory Usage', 'Swap Usage', 'Disk Usage'])
+            data['Timestamp'] = pd.to_datetime(data['Timestamp'])
+            data.set_index('Timestamp', inplace=True)
+            last_hour_data = data.tail(range_time_dic[range_time])
+            st.line_chart(last_hour_data)
+
     # --- Delete data
     if st.button(f"{idio['Delete all my data'][idi]} ❗"):
         st.write(f"{idio['All data will be deteted, this operation can not be undone, are you sure'][idi]}?")
@@ -180,6 +198,10 @@ def start(authenticator):
 
 
 if __name__ == '__main__':
+    st.set_page_config(
+        page_title="Assistant",
+        page_icon="❗",
+    )
     with open('config.yaml', 'r') as file:
         config = yaml.safe_load(file)
 

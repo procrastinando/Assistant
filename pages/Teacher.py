@@ -47,7 +47,7 @@ def start(authenticator):
 
     #if True:
     try:
-        if user_data['childs'] != None:
+        if user_data['childs'] != []:
 
             col1, col2 = st.columns([1, 1])
             with col1:
@@ -142,7 +142,7 @@ def start(authenticator):
             difficulty_n = float(st.text_input(idio['Difficulty'][idi], difficulty))
 
             target_score_l = child_data['miniapps']['read-speak']['target_score']
-            target_score_l_n = float(st.text_input(idio['Target score'][idi], target_score_l))
+            target_score_l_n = float(st.text_input(idio['Target score'][idi], target_score_l, key=17))
 
             languages_save = st.button(idio['Save'][idi], key=4)
             if languages_save:
@@ -158,61 +158,65 @@ def start(authenticator):
             read_speak_hws = list(child_data['miniapps']['read-speak']['homework'].keys())
             read_speak_hw = st.selectbox(idio['Select a homework to update or delete'][idi], read_speak_hws, key=11)
 
-            read_speak_hw_content = ''
-            for n in child_data['miniapps']['read-speak']['homework'][read_speak_hw]:
-                read_speak_hw_content = read_speak_hw_content + child_data['miniapps']['read-speak']['homework'][read_speak_hw][n]['text'] + '.'
+            try:
+                read_speak_hw_content = ''
+                for n in child_data['miniapps']['read-speak']['homework'][read_speak_hw]:
+                    read_speak_hw_content = read_speak_hw_content + child_data['miniapps']['read-speak']['homework'][read_speak_hw][n]['text'] + '.'
 
-            read_speak_hw_concat = st.text_area(idio['Homework, separate sentences by dots'][idi], read_speak_hw_content)
-            lang = st.selectbox(idio['Select language'][idi], langs, key=14, index=langs.index(idio['Language code'][user_data['idiom']]))
+                read_speak_hw_concat = st.text_area(idio['Homework, separate sentences by dots'][idi], read_speak_hw_content)
+                lang = st.selectbox(idio['Select language'][idi], langs, key=14, index=langs.index(idio['Language code'][user_data['idiom']]))
 
-            col1, col2, col3 = st.columns(3)
-            with col1:
-                button_del_hw = st.button(f"{idio['Delete homework'][idi]} ⚠️", key=5)
-            with col2:
-                button_update_hw = st.button(idio['Update homework'][idi], key=13)
- 
-            if button_del_hw:
-                try:
-                    child_data['miniapps']['read-speak']['homework'].pop(read_speak_hw)
-                    child_data['miniapps']['read-speak']['homework_lang'].pop(read_speak_hw)
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    button_del_hw = st.button(f"{idio['Delete homework'][idi]} ⚠️", key=5)
+                with col2:
+                    button_update_hw = st.button(idio['Update homework'][idi], key=13)
+    
+                if button_del_hw:
+                    try:
+                        child_data['miniapps']['read-speak']['homework'].pop(read_speak_hw)
+                        child_data['miniapps']['read-speak']['homework_lang'].pop(read_speak_hw)
+                        update_config(child_data, 'users/'+i+'.yaml')
+                        st.write(f'Done!  {read_speak_hw} deleted')
+                    except:
+                        pass
+
+                if button_update_hw:
+                    child_data['miniapps']['read-speak']['homework_lang'][read_speak_hw] = {}
+                    child_data['miniapps']['read-speak']['homework_lang'][read_speak_hw]['lang'] = lang.split(':')[0]
+                    read_speak_hw_concat = read_speak_hw_concat.split('.')
+                    child_data['miniapps']['read-speak']['homework'][read_speak_hw] = {}
+
+                    for j in range(len(read_speak_hw_concat)):
+                        child_data['miniapps']['read-speak']['homework'][read_speak_hw][j] = {}
+                        child_data['miniapps']['read-speak']['homework'][read_speak_hw][j]['score'] = 0.0
+                        child_data['miniapps']['read-speak']['homework'][read_speak_hw][j]['text'] = read_speak_hw_concat[j]
+
+                    coins = round(len(read_speak_hw_concat) * child_data['miniapps']['read-speak']['target_score'] / child_data['miniapps']['read-speak']['ex_rate'], 2)
+                    st.write(f'Done! Expected coins: {coins}')
                     update_config(child_data, 'users/'+i+'.yaml')
-                    st.write(f'Done!  {read_speak_hw} deleted')
-                except:
-                    pass
 
-            if button_update_hw:
-                child_data['miniapps']['read-speak']['homework_lang'][read_speak_hw] = {}
-                child_data['miniapps']['read-speak']['homework_lang'][read_speak_hw]['lang'] = lang.split(':')[0]
-                read_speak_hw_concat = read_speak_hw_concat.split('.')
-                child_data['miniapps']['read-speak']['homework'][read_speak_hw] = {}
+                new_read_speak_hw = st.text_area(idio['Add new homework, separate sentences by dots'][idi])
+                new_read_speak_hw_name = st.text_input(idio['Enter new homework name'][idi])
+                lang_new = st.selectbox(idio['Select language'][idi], langs, key=15, index=langs.index(idio['Language code'][user_data['idiom']]))
+                add_rs_hw = st.button(idio['Add homework'][idi])
+                if add_rs_hw:
+                    child_data['miniapps']['read-speak']['homework_lang'][new_read_speak_hw_name] = {}
+                    child_data['miniapps']['read-speak']['homework_lang'][new_read_speak_hw_name]['lang'] = lang_new.split(':')[0]
+                    new_read_speak_hw = new_read_speak_hw.split('.')
+                    child_data['miniapps']['read-speak']['homework'][new_read_speak_hw_name] = {}
 
-                for j in range(len(read_speak_hw_concat)):
-                    child_data['miniapps']['read-speak']['homework'][read_speak_hw][j] = {}
-                    child_data['miniapps']['read-speak']['homework'][read_speak_hw][j]['score'] = 0.0
-                    child_data['miniapps']['read-speak']['homework'][read_speak_hw][j]['text'] = read_speak_hw_concat[j]
+                    for j in range(len(new_read_speak_hw)):
+                        child_data['miniapps']['read-speak']['homework'][new_read_speak_hw_name][j] = {}
+                        child_data['miniapps']['read-speak']['homework'][new_read_speak_hw_name][j]['score'] = 0.0
+                        child_data['miniapps']['read-speak']['homework'][new_read_speak_hw_name][j]['text'] = new_read_speak_hw[j]
 
-                coins = round(len(read_speak_hw_concat) * child_data['miniapps']['read-speak']['target_score'] / child_data['miniapps']['read-speak']['ex_rate'], 2)
-                st.write(f'Done! Expected coins: {coins}')
-                update_config(child_data, 'users/'+i+'.yaml')
-
-            new_read_speak_hw = st.text_area(idio['Add new homework, separate sentences by dots'][idi])
-            new_read_speak_hw_name = st.text_input(idio['Enter new homework name'][idi])
-            lang_new = st.selectbox(idio['Select language'][idi], langs, key=15, index=langs.index(idio['Language code'][user_data['idiom']]))
-            add_rs_hw = st.button(idio['Add homework'][idi])
-            if add_rs_hw:
-                child_data['miniapps']['read-speak']['homework_lang'][new_read_speak_hw_name] = {}
-                child_data['miniapps']['read-speak']['homework_lang'][new_read_speak_hw_name]['lang'] = lang_new.split(':')[0]
-                new_read_speak_hw = new_read_speak_hw.split('.')
-                child_data['miniapps']['read-speak']['homework'][new_read_speak_hw_name] = {}
-
-                for j in range(len(new_read_speak_hw)):
-                    child_data['miniapps']['read-speak']['homework'][new_read_speak_hw_name][j] = {}
-                    child_data['miniapps']['read-speak']['homework'][new_read_speak_hw_name][j]['score'] = 0.0
-                    child_data['miniapps']['read-speak']['homework'][new_read_speak_hw_name][j]['text'] = new_read_speak_hw[j]
-
-                coins = round(len(new_read_speak_hw) * child_data['miniapps']['read-speak']['target_score'] / child_data['miniapps']['read-speak']['ex_rate'], 2)
-                st.write(f'Done! Expected coins: {coins}')
-                update_config(child_data, 'users/'+i+'.yaml')
+                    coins = round(len(new_read_speak_hw) * child_data['miniapps']['read-speak']['target_score'] / child_data['miniapps']['read-speak']['ex_rate'], 2)
+                    st.write(f'Done! Expected coins: {coins}')
+                    update_config(child_data, 'users/'+i+'.yaml')
+            
+            except:
+                st.write(idio['There are no read and speak homeworks'][idi])
 
             # --- LISTEN-WRITE
             st.divider()
@@ -248,7 +252,7 @@ def start(authenticator):
             st.subheader(f"3.1. {idio['Listen and Write homeworks'][idi]}")
 
             try:
-                vocabulary_name_new = st.text_input(idio['Choose a vocabulary name'][idi])
+                vocabulary_name_new = st.text_input(idio['Choose a vocabulary name'][idi], key=19)
                 create_vocabulary = st.button(idio['Create vocabulary'][idi])
 
                 vocabulary_names = list(child_data['miniapps']['listen-write']['homework'].keys())
@@ -267,7 +271,7 @@ def start(authenticator):
                     update_vocabulary = st.button(idio['Update vocabulary'][idi])
 
             except:
-                vocabulary_name_new = st.text_input(idio['Choose a vocabulary name'][idi])
+                vocabulary_name_new = st.text_input(idio['Choose a vocabulary name'][idi], key=20)
                 create_vocabulary = st.button(idio['Create vocabulary'][idi])
 
                 vocabulary_names = list(child_data['miniapps']['listen-write']['homework'].keys())
@@ -287,14 +291,14 @@ def start(authenticator):
                 update_config(child_data, 'users/'+i+'.yaml')
 
             # delete vocabulary
-            if button_del_lwhw:
-                try:
+            try:
+                if button_del_lwhw:
                     child_data['miniapps']['listen-write']['homework'].pop(vocabulary_name)
                     child_data['miniapps']['listen-write']['homework_conf'].pop(vocabulary_name)
                     update_config(child_data, 'users/'+i+'.yaml')
                     st.write(f'{vocabulary_name} deleted')
-                except:
-                    pass
+            except:
+                pass
             
             # update existing vocabulary
             try:
