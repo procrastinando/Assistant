@@ -53,4 +53,9 @@ def start(authenticator):
         st.error(idio['Error generating image'][idi])    
 
 if __name__ == '__main__':
+    st.set_page_config(
+        page_title="Text to image",
+        page_icon="📷",
+    )
+
     main()

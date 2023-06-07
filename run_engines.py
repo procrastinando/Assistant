@@ -7,7 +7,7 @@ try:
         config = yaml.safe_load(file)
 
     # Run commands
-    commands = [['nohup', 'python', 'run_telegram.py'], ['nohup', 'python', 'run_stats.py']]
+    commands = [['python', 'run_telegram.py'], ['python', 'run_stats.py']]
 
     for i in range(int(config['engines']['large'])):
         commands.append(['python', 'run_extra.py', 'large'])
@@ -17,6 +17,7 @@ try:
         
     for command in commands:
         subprocess.Popen(command)
-        print("Running engine")
+
 except:
+    time.sleep(2)
     print("Engines not running, please complete initial setup")

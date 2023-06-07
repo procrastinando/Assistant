@@ -1,19 +1,16 @@
 admin:
-  id: null
-  url: null
+  id: 
+  url: 
 cookie:
   expiry_days: 30
   key: zonynnyakxjtein
   name: ppjrsyesswuqjtj
 credentials:
   usernames:
-    '649792299':
-      name: Shifubao
-      password: $2b$12$CEIIfd.0b4eJYfE2PhMyaO1oF8nSl08FcXqC.WpSBDnQ6gAnZ7W9a
 engines:
   large: 1
   short: 1
 preauthorized:
-  emails: null
+  emails: 
 telegram:
-  token: 6092531525:AAFctwgkmVgGTP1XsJooatyplmxg9KB6LRs
+  token: 

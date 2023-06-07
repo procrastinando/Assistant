@@ -1,6 +1,3 @@
-Add homework:
-  en: Add homework
-  es: Agregar tarea
 Add new homework, separate sentences by dots:
   en: Add new homework, separate sentences by dots
   es: Agregar nueva tarea, separar oraciones por puntos
@@ -32,8 +29,8 @@ Multiplications range:
   en: Multiplications range
   es: Rango de multiplicaciones
 Enter new homework name:
-  en: Enter new homework name
-  es: Ingrese el nuevo nombre de la tarea
+  en: Enter a new name for a new homework
+  es: Ingrese un nombre para una tarea nueva
 Exchange rate:
   en: Exchange rate
   es: Tipo de cambio
@@ -197,12 +194,15 @@ Language code:
   en: "en: English"
   es: "es: Spanish"
 There are no vocabularies to show:
-  en: There are no vocabularies to show
-  es: No hay vocabularios que mostrar
+  en: There are no vocabularies to show, please create one
+  es: No hay vocabularios que mostrar, por favor crea uno
+There are no homeworks to show:
+  en: There are no homeworks to show, please create one
+  es: No hay tareas que mostrar, por favor crea una
 Language settings:
   en: Language settings
   es: Ajustes de idioma
-Select a homework to delete:
+List of homeworks:
   en: List of homeworks
   es: Lista de tareas
 Insert a valid OpenAI API here:
@@ -388,3 +388,24 @@ Start:
 Select language to translate, no selection, no translation:
   en: Select languages to translate, no selection, no translation
   es: Seleccione idiomas a traducir, no iisiomas seleccionados, no habra traduccion
+Running...:
+  en: Running ...
+  es: Corriendo ...
+Finished!:
+  en: Finished!
+  es: Terminado!
+Send audio/video to transcribe or generate subtitles (25Mb limit):
+  en: Send audio/video to transcribe or generate subtitles (25Mb limit)
+  es: Envie audio/video para transcribir o generar subtitulos (limite 25Mb)
+Create homework:
+  en: Create homework
+  es: Crear tarea
+Add homework:
+  en: Add homework
+  es: Agregar tarea
+Generate SRT subtitles file:
+  en: Generate SRT subtitles file
+  es: Generar archivos SRT de subtitulos
+Error using Openai API to translate the text:
+  en: Error using Openai API to translate the text
+  es: Error al usar la API de Openai para traducir el texto

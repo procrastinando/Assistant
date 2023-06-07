@@ -47,6 +47,9 @@ def start(authenticator):
     add_lang_hw = st.button(idio['Read images'][idi])
 
     if add_lang_hw:
+        info_placeholder = st.empty()
+        info_placeholder.info(idio['Running...'][idi])
+
         text = add_ocr(images_path)
         st.write(text)
 
@@ -56,5 +59,12 @@ def start(authenticator):
             if os.path.isfile(file_path):
                 os.remove(file_path)
 
+        info_placeholder.info(idio['Finished!'][idi])
+
 if __name__ == '__main__':
+    st.set_page_config(
+        page_title="Image to Text",
+        page_icon="🅰",
+    )
+
     main()

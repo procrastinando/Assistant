@@ -120,7 +120,7 @@ def set_commands(BOT_TOKEN):
     url = f'https://api.telegram.org/bot{BOT_TOKEN}/setMyCommands'
     headers = {"Content-Type": "application/json"}
     data = {
-        "commands": [{"command": "settings", "description": "Manage your account ⚙️"}, {"command": "image2text", "description": "Image to text (OCR) 🅰"}, {"command": "teacher", "description": "AI Teacher assistant 📚"}, {"command": "text2image", "description": "AI image generator 📷"}, {"command": "youtube", "description": "Youtube downloader 📺"}]
+        "commands": [{"command": "settings", "description": "Manage your account ⚙️"}, {"command": "image2text", "description": "Image to text (OCR) 🅰"}, {"command": "teacher", "description": "AI Teacher assistant 📚"}, {"command": "text2image", "description": "AI image generator 📷"}, {"command": "voice2text", "description": "AI voice to text 🎙"}, {"command": "youtube", "description": "Youtube downloader 📺"}]
         }
     data = json.dumps(data)
     resp = requests.post(url, data=data, headers=headers)
@@ -214,15 +214,13 @@ def send_mediagroup(bot_token, chat_id, image_urls):
     data = {'chat_id': chat_id, 'media': json.dumps(media)}
     response = requests.post(url, data=data)
 
-def delete_old_files():
-    folder_path = 'miniapps/youtube'
-    max_age = 30*60  # 30 minutes
-    
-    for file_name in os.listdir(folder_path):
-        file_path = os.path.join(folder_path, file_name)
-        if os.path.isfile(file_path):
-            file_age = time.time() - os.path.getmtime(file_path)
-            if file_age > max_age:
+def delete_old_files(directory_path, time_threshold):
+    current_time = time.time()
+    for foldername, subfolders, filenames in os.walk(directory_path):
+        for filename in filenames:
+            file_path = os.path.join(foldername, filename)
+            file_time = os.path.getmtime(file_path)
+            if current_time - file_time > time_threshold:
                 os.remove(file_path)
 
 def process_extra(BOT_TOKEN):
@@ -259,7 +257,8 @@ def main(BOT_TOKEN, streamlit_url, admin_id):
     url = f'https://api.telegram.org/bot{BOT_TOKEN}/getUpdates'
 
     while True:
-        delete_old_files()
+        delete_old_files('miniapps/youtube/', 1800)
+        delete_old_files('miniapps/voice2text/', 1800)
         process_extra(BOT_TOKEN)
         response = requests.get(url)
         resp = response.json()
@@ -375,6 +374,10 @@ def main(BOT_TOKEN, streamlit_url, admin_id):
                                         user_data['location'] = i['message']['text']
                                         send_message(BOT_TOKEN, user_id, idio['Select images to process'][idi])
 
+                                    elif i['message']['text'] == '/voice2text': # <<====
+                                        user_data['location'] = i['message']['text']
+                                        send_message(BOT_TOKEN, user_id, idio['Send audio/video to transcribe or generate subtitles (25Mb limit)'][idi])
+
                                     elif i['message']['text'] == '/youtube': # <<====
                                         user_data['location'] = i['message']['text']
                                         send_message(BOT_TOKEN, user_id, idio['Send the YouTube Link'][idi])
@@ -418,8 +421,8 @@ def main(BOT_TOKEN, streamlit_url, admin_id):
 
                                 elif 'voice' in i['message']:
 
-                                    if user_data['miniapps']['read-speak']['homework'] != None: # <<====
-                                        if user_data['location'] == '/read_speak':
+                                    if user_data['location'] == '/read_speak':
+                                        if user_data['miniapps']['read-speak']['homework'] != None: # <<====
                                             if not 'forward_from' in i['message']:
                                                 if i['message']['voice']['duration'] < 16:
                                                     with open('extra.yaml', 'r') as file:
@@ -430,12 +433,37 @@ def main(BOT_TOKEN, streamlit_url, admin_id):
                                                 else:
                                                     send_message(BOT_TOKEN, user_id, idio['Audio lenght limit is 15 seconds'][idi])
 
+                                    elif user_data['location'] == '/voice2text':
+                                        if i['message']['voice']['file_size'] < 25*1024*1024:
+                                            resp_media = requests.get(f"https://api.telegram.org/bot{BOT_TOKEN}/getFile?file_id={i['message']['voice']['file_id']}")
+                                            response_media = resp_media.json()
+                                            url_media = f'https://api.telegram.org/file/bot{BOT_TOKEN}/' + response_media['result']["file_path"] # https://api.telegram.org/file/bot<token>/<file_path>
+                                            response = requests.get(url_media)
+                                            response.raise_for_status()
+                                            with open(f"miniapps/voice2text/{user_id}", 'wb') as f:
+                                                f.write(response.content)
+                                        
+                                            reply_markup = [[]]
+                                            reply_markup[0].append({'text': 'Whisper-tiny', 'callback_data': 'whisper-tiny'})
+                                            reply_markup[0].append({'text': 'Whisper-base', 'callback_data': 'whisper-base'})
+                                            reply_markup[0].append({'text': 'Openai', 'callback_data': 'openai-large'})
+                                            send_inline(BOT_TOKEN, user_id, idio['Whisper size (the larger, the slower)'][idi], reply_markup)
+
                                 elif 'photo' in i['message']:
 
                                     if user_data['location'] == '/image2text':
                                         with open('extra.yaml', 'r') as file:
+                                            file_id = i['message']['photo'][-1]['file_id']
+                                            resp_media = requests.get(f'https://api.telegram.org/bot{BOT_TOKEN}/getFile?file_id={file_id}') # File ID
+                                            response_media = resp_media.json()
+                                            url_media = f'https://api.telegram.org/file/bot{BOT_TOKEN}/' + response_media['result']["file_path"]
+                                            response = requests.get(url_media)
+                                            with open('miniapps/languages/images/'+user_id, 'wb') as file:
+                                                file.write(response.content)
+
                                             extra = yaml.safe_load(file)
-                                            extra['short'].append(f"{user_id}|img2text|{i['message']['photo'][-1]['file_id']}")
+                                            extra['short'].append(f"{user_id}|img2text")
+
                                         with open('extra.yaml', 'w') as file:
                                             yaml.dump(extra, file)
 
@@ -482,6 +510,20 @@ def main(BOT_TOKEN, streamlit_url, admin_id):
                                         send_inline(BOT_TOKEN, i['message']['text'], f"{idio['Request from'][idi]} {user_id} {idio['to manage your account, Respond yes to accept'][idi]}", reply_markup)
 
                             elif 'callback_query' in i:
+
+                                # Voice2text
+                                if "-" in i['callback_query']['data']: # whisper-tiny
+                                    cb_data = i['callback_query']['data'].split("-")
+
+                                    if cb_data[0] == 'openai':
+                                        send_message(BOT_TOKEN, user_id, "Not developed yet")
+                                    else: # [whisper, tiny]
+                                        with open('extra.yaml', 'r') as file:
+                                            extra = yaml.safe_load(file)
+                                        extra['large'].append(f"{user_id}|voice2text|{cb_data[0]}|{cb_data[1]}") # user_id|voice2text|whisper|tiny
+
+                                        with open('extra.yaml', 'w') as file:
+                                            yaml.dump(extra, file)
 
                                 # Youtube
                                 if "*" in i['callback_query']['data']:

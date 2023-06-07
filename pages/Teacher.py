@@ -56,54 +56,6 @@ def start(authenticator):
             child_name = usernames[i]['name']
             st.subheader(f'✔️ {child_name}')
 
-            # --- Mathematics
-            st.header(f"1. {idio['Mathematics'][idi]}")
-
-            mathematics_restart = st.button(f"{idio['Restart homework'][idi]} ⚠️")
-            if mathematics_restart:
-                child_data['miniapps']['mathematics']['current_score'] = 0.0
-                update_config(child_data, 'users/'+i+'.yaml')
-
-            target_score_m = child_data['miniapps']['mathematics']['target_score']
-            target_score_m_n = float(st.text_input(idio['Target score'][idi], target_score_m))
-
-            fault_penalty = child_data['miniapps']['mathematics']['fault_penalty']
-            fault_penalty_n = float(st.text_input(idio['Fault penalty'][idi], fault_penalty))
-
-            ex_rate_m = child_data['miniapps']['mathematics']['ex_rate']
-            ex_rate_m_n = float(st.text_input(idio['Exchange rate'][idi], ex_rate_m, key=1))
-
-            operations_n = st.multiselect(idio['Mathematic homeworks'][idi], ['sum', 'rest', 'multiplication', 'division'], child_data['miniapps']['mathematics']['operations'])
-
-            mathematics_save2 = st.button(f"{idio['Save'][idi]}", key=18)
-            if mathematics_save2:
-                child_data['miniapps']['mathematics']['operations'] = operations_n
-                child_data['miniapps']['mathematics']['ex_rate'] = ex_rate_m_n
-                child_data['miniapps']['mathematics']['fault_penalty'] = fault_penalty_n
-                child_data['miniapps']['mathematics']['target_score'] = target_score_m_n
-                update_config(child_data, 'users/'+i+'.yaml')
-
-            st.subheader(f"1.1. {idio['Basic operations'][idi]}:")
-
-            sum_range = st.slider(idio['Sums range'][idi], 0, 128, (child_data['miniapps']['mathematics']['homework']['sum']['lower_num'], child_data['miniapps']['mathematics']['homework']['sum']['upper_num']))
-            rest_range = st.slider(idio['Rests range'][idi], 0, 128, (child_data['miniapps']['mathematics']['homework']['rest']['lower_num'], child_data['miniapps']['mathematics']['homework']['rest']['upper_num']))
-            multiplication_range = st.slider(idio['Multiplications range'][idi], 0, 32, (child_data['miniapps']['mathematics']['homework']['multiplication']['lower_num'], child_data['miniapps']['mathematics']['homework']['multiplication']['upper_num']))
-            division_range = st.slider(idio['Divisions range'][idi], 0, 32, (child_data['miniapps']['mathematics']['homework']['division']['lower_num'], child_data['miniapps']['mathematics']['homework']['division']['upper_num']))
-
-            mathematics_save = st.button(idio['Save'][idi], key=19)
-
-            if mathematics_save:
-                child_data['miniapps']['mathematics']['homework']['division']['lower_num'] = division_range[0]
-                child_data['miniapps']['mathematics']['homework']['division']['upper_num'] = division_range[1]
-                child_data['miniapps']['mathematics']['homework']['multiplication']['lower_num'] = multiplication_range[0]
-                child_data['miniapps']['mathematics']['homework']['multiplication']['upper_num'] = multiplication_range[1]
-                child_data['miniapps']['mathematics']['homework']['sum']['lower_num'] = sum_range[0]
-                child_data['miniapps']['mathematics']['homework']['sum']['upper_num'] = sum_range[1]
-                child_data['miniapps']['mathematics']['homework']['rest']['lower_num'] = rest_range[0]
-                child_data['miniapps']['mathematics']['homework']['rest']['upper_num'] = rest_range[1]
-                update_config(child_data, 'users/'+i+'.yaml')
-
-            st.divider()
             # --- Languages settings
             st.header(idio['Language settings'][idi])
             t2v_models = ['google', 'azure']
@@ -118,22 +70,22 @@ def start(authenticator):
             if v2t_model == 'whisper':
                 whisper_size = st.selectbox(idio['Whisper size (the larger, the slower)'][idi], whisper_sizes, index=whisper_sizes.index(child_data['miniapps']['read-speak']['whisper-size']))
 
-            if t2v_model == 'azure' or v2t_model == 'openai':
-                st.error(f"{idio['Only available for PRO users'][idi]} 🙁")
-            else:
-                languages_save = st.button(idio['Save'][idi], key=2)
+                # speech_key, service_region = user_data['credentials']['azure']['token'], user_data['credentials']['azure']['region']
+                # speech_config = SpeechConfig(subscription=speech_key, region=service_region)
+                # audio_config = AudioOutputConfig(filename="t2v.mp3")
+                # synthesizer = SpeechSynthesizer(speech_config=speech_config, audio_config=audio_config)
 
-                if languages_save:
-                    child_data['miniapps']['read-speak']['voice-speed'] = voice_speed_n
-                    child_data['miniapps']['read-speak']['t2v-model'] = t2v_model
-                    child_data['miniapps']['read-speak']['v2t-model'] = v2t_model
-                    if v2t_model == 'whisper':
-                        child_data['miniapps']['read-speak']['whisper-size'] = whisper_size
-                    update_config(child_data, 'users/'+i+'.yaml')
+            if st.button(idio['Save'][idi], key=2):
+                child_data['miniapps']['read-speak']['voice-speed'] = voice_speed_n
+                child_data['miniapps']['read-speak']['t2v-model'] = t2v_model
+                child_data['miniapps']['read-speak']['v2t-model'] = v2t_model
+                if v2t_model == 'whisper':
+                    child_data['miniapps']['read-speak']['whisper-size'] = whisper_size
+                update_config(child_data, 'users/'+i+'.yaml')
 
             # --- READ-SPEAKING
             st.divider()
-            st.header(f"2. {idio['Read and speak'][idi]}")
+            st.header(f"1. {idio['Read and speak'][idi]}")
 
             ex_rate_l = child_data['miniapps']['read-speak']['ex_rate']
             ex_rate_l_n = float(st.text_input(idio['Exchange rate'][idi], ex_rate_l, key=3))
@@ -153,12 +105,31 @@ def start(authenticator):
 
             # --- List homeworks
             langs = [    'af: Afrikaans',     'ar: Arabic',     'bg: Bulgarian',     'bn: Bengali',     'bs: Bosnian',     'ca: Catalan',     'cs: Czech',     'da: Danish',     'de: German',     'el: Greek',     'en: English',     'es: Spanish',     'et: Estonian',     'fi: Finnish',     'fr: French',     'gu: Gujarati',     'hi: Hindi',     'hr: Croatian',     'hu: Hungarian',     'id: Indonesian',     'is: Icelandic',     'it: Italian',     'iw: Hebrew',     'ja: Japanese',     'jw: Javanese',     'km: Khmer',     'kn: Kannada',     'ko: Korean',     'la: Latin',     'lv: Latvian',     'ml: Malayalam',     'mr: Marathi',     'ms: Malay',     'my: Myanmar (Burmese)',     'ne: Nepali',     'nl: Dutch',     'no: Norwegian',     'pl: Polish',     'pt: Portuguese',     'ro: Romanian',     'ru: Russian',     'si: Sinhala',     'sk: Slovak',     'sq: Albanian',     'sr: Serbian',     'su: Sundanese',     'sv: Swedish',     'sw: Swahili',     'ta: Tamil',     'te: Telugu',     'th: Thai',     'tl: Filipino',     'tr: Turkish',     'uk: Ukrainian',     'ur: Urdu',     'vi: Vietnamese',     'zh-CN: Chinese (Simplified)',     'zh-TW: Chinese (Mandarin/Taiwan)',     'zh: Chinese (Mandarin)']
-            st.subheader(f"2.1. {idio['Read and Speak homeworks'][idi]}")
-            
-            read_speak_hws = list(child_data['miniapps']['read-speak']['homework'].keys())
-            read_speak_hw = st.selectbox(idio['Select a homework to update or delete'][idi], read_speak_hws, key=11)
+            st.subheader(f"1.1. {idio['Read and Speak homeworks'][idi]}")
 
-            try:
+            # --- Create new homework
+            new_read_speak_hw_name = st.text_input(idio['Enter new homework name'][idi])
+
+            if st.button(idio['Create homework'][idi]):
+                child_data['miniapps']['read-speak']['homework_lang'][new_read_speak_hw_name] = {}
+                child_data['miniapps']['read-speak']['homework_lang'][new_read_speak_hw_name]['lang'] = 'en'
+                new_read_speak_hw = "This is an example. Write some sentences here."
+                child_data['miniapps']['read-speak']['homework'][new_read_speak_hw_name] = {}
+
+                for j in range(len(new_read_speak_hw)):
+                    child_data['miniapps']['read-speak']['homework'][new_read_speak_hw_name][j] = {}
+                    child_data['miniapps']['read-speak']['homework'][new_read_speak_hw_name][j]['score'] = 0.0
+                    child_data['miniapps']['read-speak']['homework'][new_read_speak_hw_name][j]['text'] = new_read_speak_hw[j]
+
+                coins = round(len(new_read_speak_hw) * child_data['miniapps']['read-speak']['target_score'] / child_data['miniapps']['read-speak']['ex_rate'], 2)
+                st.write(f'Done! Expected coins: {coins}')
+                update_config(child_data, 'users/'+i+'.yaml')
+
+            # --- Show current homeworks
+            read_speak_hws = list(child_data['miniapps']['read-speak']['homework'].keys())
+            if read_speak_hws:
+                read_speak_hw = st.selectbox(idio['Select a homework to update or delete'][idi], read_speak_hws, key=11)
+
                 read_speak_hw_content = ''
                 for n in child_data['miniapps']['read-speak']['homework'][read_speak_hw]:
                     read_speak_hw_content = read_speak_hw_content + child_data['miniapps']['read-speak']['homework'][read_speak_hw][n]['text'] + '.'
@@ -171,7 +142,7 @@ def start(authenticator):
                     button_del_hw = st.button(f"{idio['Delete homework'][idi]} ⚠️", key=5)
                 with col2:
                     button_update_hw = st.button(idio['Update homework'][idi], key=13)
-    
+
                 if button_del_hw:
                     try:
                         child_data['miniapps']['read-speak']['homework'].pop(read_speak_hw)
@@ -196,31 +167,12 @@ def start(authenticator):
                     st.write(f'Done! Expected coins: {coins}')
                     update_config(child_data, 'users/'+i+'.yaml')
 
-                new_read_speak_hw = st.text_area(idio['Add new homework, separate sentences by dots'][idi])
-                new_read_speak_hw_name = st.text_input(idio['Enter new homework name'][idi])
-                lang_new = st.selectbox(idio['Select language'][idi], langs, key=15, index=langs.index(idio['Language code'][user_data['idiom']]))
-                add_rs_hw = st.button(idio['Add homework'][idi])
-                if add_rs_hw:
-                    child_data['miniapps']['read-speak']['homework_lang'][new_read_speak_hw_name] = {}
-                    child_data['miniapps']['read-speak']['homework_lang'][new_read_speak_hw_name]['lang'] = lang_new.split(':')[0]
-                    new_read_speak_hw = new_read_speak_hw.split('.')
-                    child_data['miniapps']['read-speak']['homework'][new_read_speak_hw_name] = {}
-
-                    for j in range(len(new_read_speak_hw)):
-                        child_data['miniapps']['read-speak']['homework'][new_read_speak_hw_name][j] = {}
-                        child_data['miniapps']['read-speak']['homework'][new_read_speak_hw_name][j]['score'] = 0.0
-                        child_data['miniapps']['read-speak']['homework'][new_read_speak_hw_name][j]['text'] = new_read_speak_hw[j]
-
-                    coins = round(len(new_read_speak_hw) * child_data['miniapps']['read-speak']['target_score'] / child_data['miniapps']['read-speak']['ex_rate'], 2)
-                    st.write(f'Done! Expected coins: {coins}')
-                    update_config(child_data, 'users/'+i+'.yaml')
-            
-            except:
-                st.write(idio['There are no read and speak homeworks'][idi])
+            else:
+                st.write(idio['There are no homeworks to show'][idi])
 
             # --- LISTEN-WRITE
             st.divider()
-            st.header(f"3. {idio['Listen and Write'][idi]}")
+            st.header(f"2. {idio['Listen and Write'][idi]}")
 
             use_chatgpt = st.checkbox(idio['Use ChatGPT to make a sentence'][idi], child_data['miniapps']['listen-write']['chatgpt'])
             if use_chatgpt:
@@ -249,20 +201,21 @@ def start(authenticator):
                 update_config(child_data, 'users/'+i+'.yaml')
 
             # --- List homeworks
-            st.subheader(f"3.1. {idio['Listen and Write homeworks'][idi]}")
+            st.subheader(f"2.1. {idio['Listen and Write homeworks'][idi]}")
 
-            try:
-                vocabulary_name_new = st.text_input(idio['Choose a vocabulary name'][idi], key=19)
-                create_vocabulary = st.button(idio['Create vocabulary'][idi])
+            if list(child_data['miniapps']['listen-write']['homework'].keys()):
+                vocabulary_name_new = st.text_input(idio['Choose a vocabulary name'][idi], key=20)
+                create_vocabulary = st.button(idio['Create vocabulary'][idi], key=22)
 
                 vocabulary_names = list(child_data['miniapps']['listen-write']['homework'].keys())
-                vocabulary_name = st.selectbox(idio['Select a homework to delete'][idi], vocabulary_names, key=12)
-                
+                vocabulary_name = st.selectbox(idio['List of homeworks'][idi], vocabulary_names, key=12)
 
                 vocabulary_list = child_data['miniapps']['listen-write']['homework'][vocabulary_name]
                 vocabulary = st.text_area(idio['Vocabulary (separate by commas)'][idi], ', '.join(vocabulary_list.keys()))
                 lang_voc = st.selectbox(idio['Select vocabulary language'][idi], langs, key=16, index=langs.index(idio['Language code'][user_data['idiom']]))
-                chatgpt_prompt = st.text_input(idio['Insert ChatGPT prompt to create write a sentence'][idi], child_data['miniapps']['listen-write']['homework_conf'][vocabulary_name]['prompt'])
+                
+                if use_chatgpt:
+                    chatgpt_prompt = st.text_input(idio['Insert ChatGPT prompt to create write a sentence'][idi], child_data['miniapps']['listen-write']['homework_conf'][vocabulary_name]['prompt'])
                 
                 scol1, scol2, scol3 = st.columns(3)
                 with scol1:
@@ -270,13 +223,16 @@ def start(authenticator):
                 with scol2:
                     update_vocabulary = st.button(idio['Update vocabulary'][idi])
 
-            except:
-                vocabulary_name_new = st.text_input(idio['Choose a vocabulary name'][idi], key=20)
-                create_vocabulary = st.button(idio['Create vocabulary'][idi])
+                # delete vocabulary
+                if button_del_lwhw:
+                    child_data['miniapps']['listen-write']['homework'].pop(vocabulary_name)
+                    child_data['miniapps']['listen-write']['homework_conf'].pop(vocabulary_name)
+                    update_config(child_data, 'users/'+i+'.yaml')
+                    st.write(f'{vocabulary_name} deleted')
 
-                vocabulary_names = list(child_data['miniapps']['listen-write']['homework'].keys())
-                vocabulary_name = st.selectbox(idio['Select a homework to delete'][idi], vocabulary_names, key=12)
-                #button_del_lwhw = st.button(f"{idio['Delete vocabulary'][idi]} ⚠️", key=10)
+            else:
+                vocabulary_name_new = st.text_input(idio['Choose a vocabulary name'][idi], key=21)
+                create_vocabulary = st.button(idio['Create vocabulary'][idi])
 
                 st.write(idio['There are no vocabularies to show'][idi])
 
@@ -290,16 +246,6 @@ def start(authenticator):
                 child_data['miniapps']['listen-write']['homework'][vocabulary_name_new]['hello'] = 1.0
                 update_config(child_data, 'users/'+i+'.yaml')
 
-            # delete vocabulary
-            try:
-                if button_del_lwhw:
-                    child_data['miniapps']['listen-write']['homework'].pop(vocabulary_name)
-                    child_data['miniapps']['listen-write']['homework_conf'].pop(vocabulary_name)
-                    update_config(child_data, 'users/'+i+'.yaml')
-                    st.write(f'{vocabulary_name} deleted')
-            except:
-                pass
-            
             # update existing vocabulary
             try:
                 if update_vocabulary:
@@ -323,6 +269,55 @@ def start(authenticator):
             except:
                 pass
 
+
+            # --- Mathematics
+            st.divider()
+            st.header(f"3. {idio['Mathematics'][idi]}")
+
+            mathematics_restart = st.button(f"{idio['Restart homework'][idi]} ⚠️")
+            if mathematics_restart:
+                child_data['miniapps']['mathematics']['current_score'] = 0.0
+                update_config(child_data, 'users/'+i+'.yaml')
+
+            target_score_m = child_data['miniapps']['mathematics']['target_score']
+            target_score_m_n = float(st.text_input(idio['Target score'][idi], target_score_m))
+
+            fault_penalty = child_data['miniapps']['mathematics']['fault_penalty']
+            fault_penalty_n = float(st.text_input(idio['Fault penalty'][idi], fault_penalty))
+
+            ex_rate_m = child_data['miniapps']['mathematics']['ex_rate']
+            ex_rate_m_n = float(st.text_input(idio['Exchange rate'][idi], ex_rate_m, key=1))
+
+            operations_n = st.multiselect(idio['Mathematic homeworks'][idi], ['sum', 'rest', 'multiplication', 'division'], child_data['miniapps']['mathematics']['operations'])
+
+            mathematics_save2 = st.button(f"{idio['Save'][idi]}", key=18)
+            if mathematics_save2:
+                child_data['miniapps']['mathematics']['operations'] = operations_n
+                child_data['miniapps']['mathematics']['ex_rate'] = ex_rate_m_n
+                child_data['miniapps']['mathematics']['fault_penalty'] = fault_penalty_n
+                child_data['miniapps']['mathematics']['target_score'] = target_score_m_n
+                update_config(child_data, 'users/'+i+'.yaml')
+
+            st.subheader(f"3.1. {idio['Basic operations'][idi]}:")
+
+            sum_range = st.slider(idio['Sums range'][idi], 0, 128, (child_data['miniapps']['mathematics']['homework']['sum']['lower_num'], child_data['miniapps']['mathematics']['homework']['sum']['upper_num']))
+            rest_range = st.slider(idio['Rests range'][idi], 0, 128, (child_data['miniapps']['mathematics']['homework']['rest']['lower_num'], child_data['miniapps']['mathematics']['homework']['rest']['upper_num']))
+            multiplication_range = st.slider(idio['Multiplications range'][idi], 0, 32, (child_data['miniapps']['mathematics']['homework']['multiplication']['lower_num'], child_data['miniapps']['mathematics']['homework']['multiplication']['upper_num']))
+            division_range = st.slider(idio['Divisions range'][idi], 0, 32, (child_data['miniapps']['mathematics']['homework']['division']['lower_num'], child_data['miniapps']['mathematics']['homework']['division']['upper_num']))
+
+            mathematics_save = st.button(idio['Save'][idi], key=19)
+
+            if mathematics_save:
+                child_data['miniapps']['mathematics']['homework']['division']['lower_num'] = division_range[0]
+                child_data['miniapps']['mathematics']['homework']['division']['upper_num'] = division_range[1]
+                child_data['miniapps']['mathematics']['homework']['multiplication']['lower_num'] = multiplication_range[0]
+                child_data['miniapps']['mathematics']['homework']['multiplication']['upper_num'] = multiplication_range[1]
+                child_data['miniapps']['mathematics']['homework']['sum']['lower_num'] = sum_range[0]
+                child_data['miniapps']['mathematics']['homework']['sum']['upper_num'] = sum_range[1]
+                child_data['miniapps']['mathematics']['homework']['rest']['lower_num'] = rest_range[0]
+                child_data['miniapps']['mathematics']['homework']['rest']['upper_num'] = rest_range[1]
+                update_config(child_data, 'users/'+i+'.yaml')
+
         else:
             st.write(idio['You have no childs, to add a child send /add_child using telegram'][idi])
 
@@ -333,4 +328,9 @@ def start(authenticator):
         send_message(BOT_TOKEN, '649792299', e)
 
 if __name__ == '__main__':
+    st.set_page_config(
+        page_title="AI teacher assistant",
+        page_icon="📚",
+    )
+
     main()

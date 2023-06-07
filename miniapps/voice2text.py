@@ -14,7 +14,11 @@ def generate_srt_files(whisper_size, file_path, languages, beam_size):
     # Transcribe audio to text
     model_size = whisper_size
     model = WhisperModel(model_size, device="cpu", compute_type="int8")
-    segments, info = model.transcribe(file_path, beam_size=beam_size)
+    
+    if beam_size == 0:
+        segments, info = model.transcribe(file_path)
+    else:
+        segments, info = model.transcribe(file_path, beam_size=beam_size)
 
     # Generate original .srt file
     original_subs = []
@@ -46,3 +50,30 @@ def generate_srt_files(whisper_size, file_path, languages, beam_size):
 
     return original_srt, translated_srts
 
+def generate_transcription(whisper_size, file_path):
+    # Transcribe audio to text
+    model_size = whisper_size
+    model = WhisperModel(model_size, device="cpu", compute_type="int8")
+    segments, info = model.transcribe(file_path)
+
+    text = ''
+    for segment in segments:
+        text = text + segment.text
+
+    return text
+
+def transcribe(whisper_size, file_path, beam_size):
+    # Transcribe audio to text
+    model_size = whisper_size
+    model = WhisperModel(model_size, device="cpu", compute_type="int8")
+    
+    if beam_size == 0:
+        segments, info = model.transcribe(file_path)
+    else:
+        segments, info = model.transcribe(file_path, beam_size=beam_size)
+    
+    text = ''
+    for segment in segments:
+        text = text + segmnent
+
+    return text

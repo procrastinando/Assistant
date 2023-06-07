@@ -112,7 +112,7 @@ def start(authenticator):
         st.write(f"{idio['Listen and write'][idi]}: {lw_current}%   ▶️   Expected coins: {lw_coins}")
 
         # --- Block to children
-        blocked = st.multiselect(idio['Blocked commands for children'][idi], ['/settings', '/teacher', '/text2image', '/youtube', '/console', '/change_name', '/add_member', '/remove_member'], child_data['blocked'])
+        blocked = st.multiselect(idio['Blocked commands for children'][idi], ['/settings', '/teacher', '/text2image', '/voice2text', '/youtube', '/console', '/change_name', '/add_member', '/remove_member'], child_data['blocked'])
         if st.button(idio['Update blocked commands list'][idi]):
             child_data['blocked'] = blocked
             update_config(child_data, f"users/{child_id}.yaml")
@@ -177,6 +177,7 @@ def start(authenticator):
                 st.write(idio['Please restart the container'][idi])
 
             # Show the resources usage
+            st.divider()
             range_time = st.select_slider("Select time range", options=['1 hour', '1 day', '1 week', '1 month', '1 year'])
             range_time_dic = {'1 hour': 60, '1 day': 1440, '1 week': 10080, '1 month': 43200, '1 year': 525600}
 
@@ -200,7 +201,7 @@ def start(authenticator):
 if __name__ == '__main__':
     st.set_page_config(
         page_title="Assistant",
-        page_icon="❗",
+        page_icon="💡",
     )
     with open('config.yaml', 'r') as file:
         config = yaml.safe_load(file)

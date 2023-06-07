@@ -1,5 +1,6 @@
 import requests
 import subprocess
+import torch
 from faster_whisper import WhisperModel
 import openai
 import azure.cognitiveservices.speech as speechsdk
@@ -28,18 +29,20 @@ def voice2text(BOT_TOKEN, resp_media, user_data):
 
     with open('miniapps/languages/v2t.oga', 'wb') as f:
         f.write(response.content)
-    subprocess.run(['ffmpeg', '-loglevel', 'quiet', '-i', 'miniapps/languages/v2t.oga', 'miniapps/languages/v2t.wav', '-y'])
 
     try:
         if user_data['miniapps']['read-speak']['v2t-model'] == 'whisper':
             whisper_size = user_data['miniapps']['read-speak']['whisper-size'] # Choose model size
-            model = WhisperModel(whisper_size, device="cpu", compute_type="int8")
-            segments, info = model.transcribe('miniapps/languages/v2t.wav')
+            if torch.cuda.is_available():
+                model = WhisperModel(model_size, device="cuda", compute_type="float16")
+            else:
+                model = WhisperModel(model_size, device="cpu", compute_type="int8")
+            segments, info = model.transcribe('miniapps/languages/v2t.oga')
             result = ''.join([segment.text for segment in segments])
         elif user_data['miniapps']['read-speak']['v2t-model'] == 'openai':
             openai.api_key = user_data['openai']
             model = 'whisper-1'
-            audio_file = open("miniapps/languages/v2t.wav", 'rb')
+            audio_file = open("miniapps/languages/v2t.oga", 'rb')
             result = openai.Audio.transcribe(model=model, file=audio_file)["text"]
         return result
     except:

@@ -17,4 +17,4 @@ while True:
     usage_data = get_usage_data()
     with open('system_stats.csv', 'a') as f:
         f.write(f'{usage_data[0]},{usage_data[1]},{usage_data[2]},{usage_data[3]},{usage_data[4]}\n')
-    time.sleep(60)
+    time.sleep(180)

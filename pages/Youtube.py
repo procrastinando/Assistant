@@ -128,6 +128,9 @@ def start(authenticator):
                         update_config(user_data, 'users/'+st.session_state["username"]+'.yaml')
             else:
                 if st.button(f"⏩ {idio['Select file settings'][idi]}"):
+                    info_placeholder = st.empty()
+                    info_placeholder.info(idio['Running...'][idi])
+
                     yt = YouTube(url).streams
                     yt.filter(type="audio", abr=abitrate)[0].download(output_path='miniapps/youtube/', filename=st.session_state["username"]+'a')
                     subprocess.run(['ffmpeg', '-loglevel', 'quiet', '-i', 'miniapps/youtube/'+st.session_state["username"]+'a', '-c:a', 'libmp3lame', '-b:a',  abitrate.split('b')[0], '-strict', '-2', 'miniapps/youtube/'+clean_text(user_data['miniapps']['youtube']['request']['fname'])+'.mp3', '-y'])
@@ -135,6 +138,8 @@ def start(authenticator):
                     user_data['miniapps']['youtube']['file']['resolution'] = ftype
                     user_data['miniapps']['youtube']['file']['bitrate'] = abitrate
                     update_config(user_data, 'users/'+st.session_state["username"]+'.yaml')
+
+                    info_placeholder.info(idio['Finished!'][idi])
 
         # Create a download button
         try:
@@ -156,4 +161,9 @@ def start(authenticator):
         send_message(BOT_TOKEN, '649792299', e)
 
 if __name__ == '__main__':
+    st.set_page_config(
+        page_title="Youtube downloader",
+        page_icon="📺",
+    )
+
     main()
