@@ -28,10 +28,9 @@ def put_extra(job):
         yaml.dump(extra, file)
 
 def run_short(BOT_TOKEN, extra, admin_url):
-    for m in range(len(extra['short'])):
-        extra_data = extra['short'][m].split('|')
-        
-        if extra_data != []:
+    if len(extra['large']) != 0:
+        for m in range(len(extra['short'])):
+            extra_data = extra['short'][m].split('|')
 
             with open('idiom.yaml', 'r') as file:
                 idio = yaml.safe_load(file)
@@ -88,12 +87,13 @@ def run_short(BOT_TOKEN, extra, admin_url):
                 put_extra(f"{extra_data[0]}|message_reply|{message}|{extra_data[3]}")
                 take_extra('short', m)
 
+        gc.collect()
+
 
 def run_large(BOT_TOKEN, extra, admin_url):
-    for m in range(len(extra['large'])):
-        extra_data = extra['large'][m].split('|') # user_id|voice2text|whisper|tiny
-
-        if extra_data != []:
+    if len(extra['large']) != 0:
+        for m in range(len(extra['large'])):
+            extra_data = extra['large'][m].split('|') # user_id|voice2text|whisper|tiny
 
             with open('idiom.yaml', 'r') as file:
                 idio = yaml.safe_load(file)
@@ -109,6 +109,8 @@ def run_large(BOT_TOKEN, extra, admin_url):
                 put_extra(f"{extra_data[0]}|message|{text}")
                 take_extra('large', m)
 
+        gc.collect()
+
 
 def main(BOT_TOKEN, arg1, admin_url):
     while True:
@@ -117,18 +119,11 @@ def main(BOT_TOKEN, arg1, admin_url):
             extra = yaml.safe_load(file)
 
         if arg1 == 'short':
-            try:
-                run_short(BOT_TOKEN, extra, admin_url)
-            except:
-                pass
+            run_short(BOT_TOKEN, extra, admin_url)
 
         elif arg1 == 'large':
-            try:
-                run_large(BOT_TOKEN, extra, admin_url)
-                run_short(BOT_TOKEN, extra, admin_url)
-            except:
-                pass
-        gc.collect()
+            run_large(BOT_TOKEN, extra, admin_url)
+            run_short(BOT_TOKEN, extra, admin_url)
 
 if __name__ == '__main__':
 
