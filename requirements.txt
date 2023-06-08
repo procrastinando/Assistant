@@ -10,3 +10,4 @@ httpx
 pytube
 deep-translator
 srt
+psutil
