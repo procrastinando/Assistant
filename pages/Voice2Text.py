@@ -1,6 +1,7 @@
 import sys
 sys.path.insert(0, '/translator/lib/python3.9/site-packages')
-import argostranslate
+import argostranslate.package
+import argostranslate.translate
 sys.path.remove('/translator/lib/python3.9/site-packages')
 
 import streamlit as st
@@ -13,9 +14,6 @@ import shutil
 import torch
 from faster_whisper import WhisperModel
 from deep_translator import ChatGptTranslator
-
-import argostranslate.package
-import argostranslate.translate
 
 from run_telegram import open_data, update_config
 from miniapps.voice2text import generate_srt_files, generate_translation
