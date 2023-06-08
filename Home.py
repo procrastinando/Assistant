@@ -296,10 +296,10 @@ if __name__ == '__main__':
     with open('config.yaml', 'r') as file:
         config = yaml.safe_load(file)
 
-    if config['telegram']['token']:
+    if config['telegram']['token'] and config['admin']['id']:
         main()
 
-    else:
+    else: 
         st.title("Set up first boot")
 
         ad = st.text_input("Set admin user ID (Telegram ID)")

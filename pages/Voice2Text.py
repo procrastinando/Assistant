@@ -97,7 +97,7 @@ def start(authenticator):
         if whisper_size == 'openai': 
             st.write('Comming soon')
         else:
-            lang_list = ['en', 'es', 'ru']
+            lang_list = ['ar', 'az', 'ca', 'zh-CN', 'cs', 'da', 'nl', 'en', 'eo', 'fi', 'fr', 'de', 'el', 'he', 'hi', 'hu', 'id', 'ga', 'it', 'ja', 'ko', 'fa', 'pl', 'pt', 'ru', 'sk', 'es', 'sv', 'tr', 'uk']
             languages = st.multiselect(idio['Select language to translate, no selection, no translation'][idi], lang_list)
 
             if languages:

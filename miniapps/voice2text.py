@@ -81,8 +81,8 @@ def generate_srt_files(whisper_size, file_path, translator_engine, languages, be
                         st.error("Chatgpt API or network error")
                 if translator_engine == 'Argostranslate':
                     try:
-                        result = argos_translate(sub.content, info.language, language)
-                        translated_text = argostranslate.translate.translate(sub.content, info.language, language)
+                        result = argos_translate(sub.content, info.language, language.split('-')[0])
+                        translated_text = argostranslate.translate.translate(sub.content, info.language, language.split('-')[0])
                     except:
                         st.error("Argostranslate cannot translate to this language")
                 if translator_engine == 'Google translator':
