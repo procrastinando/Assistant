@@ -313,5 +313,10 @@ if __name__ == '__main__':
         cn = st.text_input("Set cookie name", ''.join(random.choice(string.ascii_lowercase) for _ in range(16)))
 
         if st.button("Start"):
+            # Create basic directories
+            for dir_path in ['miniapps/languages/images/', 'miniapps/voice2text/', 'miniapps/youtube/', 'users/']:
+                if not os.path.exists(dir_path):
+                    os.mkdir(dir_path)
+
             create_new_user(config, ad, na, pa, tt, au, pe, ce, ck, cn)
             st.write("Please, restart page")
