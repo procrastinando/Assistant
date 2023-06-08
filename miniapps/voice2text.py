@@ -1,8 +1,8 @@
-import sys
-sys.path.insert(0, '/translator/lib/python3.9/site-packages')
-import argostranslate.package
-import argostranslate.translate
-sys.path.remove('/translator/lib/python3.9/site-packages')
+# import sys
+# sys.path.insert(0, '/translator/lib/python3.9/site-packages')
+# import argostranslate.package
+# import argostranslate.translate
+# sys.path.remove('/translator/lib/python3.9/site-packages')
 
 import streamlit as st
 from faster_whisper import WhisperModel
@@ -18,31 +18,31 @@ def format_timestamp(timestamp):
     milliseconds = int((timestamp % 1) * 1000)
     return f"{hours:02d}:{minutes:02d}:{seconds:02d},{milliseconds:03d}"
 
-def argos_translate(text, from_code, to_code):
-    # Check if package is already installed
-    installed_packages = argostranslate.package.get_installed_packages()
-    installed_package = next(
-        (x for x in installed_packages if x.from_code == from_code and x.to_code == to_code), None
-    )
+# def argos_translate(text, from_code, to_code):
+#     # Check if package is already installed
+#     installed_packages = argostranslate.package.get_installed_packages()
+#     installed_package = next(
+#         (x for x in installed_packages if x.from_code == from_code and x.to_code == to_code), None
+#     )
     
-    if not installed_package:
-        # Update package index and get available packages
-        argostranslate.package.update_package_index()
-        available_packages = argostranslate.package.get_available_packages()
+#     if not installed_package:
+#         # Update package index and get available packages
+#         argostranslate.package.update_package_index()
+#         available_packages = argostranslate.package.get_available_packages()
         
-        # Find package to install
-        package_to_install = next(
-            (x for x in available_packages if x.from_code == from_code and x.to_code == to_code), None
-        )
+#         # Find package to install
+#         package_to_install = next(
+#             (x for x in available_packages if x.from_code == from_code and x.to_code == to_code), None
+#         )
         
-        # Check if package is available
-        if not package_to_install:
-            return "#There is no language package"
+#         # Check if package is available
+#         if not package_to_install:
+#             return "#There is no language package"
         
-        # Install package
-        else:
-            argostranslate.package.install_from_path(package_to_install.download())
-            return True
+#         # Install package
+#         else:
+#             argostranslate.package.install_from_path(package_to_install.download())
+#             return True
 
 def generate_srt_files(whisper_size, file_path, translator_engine, languages, beam_size, user_data):
     # Transcribe audio to text
@@ -79,13 +79,15 @@ def generate_srt_files(whisper_size, file_path, translator_engine, languages, be
                         translated_text = ChatGptTranslator(api_key=user_data['credentials']['openai'], target=language).translate(text=sub.content)
                     except:
                         st.error("Chatgpt API or network error")
-                if translator_engine == 'Argostranslate':
-                    try:
-                        result = argos_translate(sub.content, info.language, language.split('-')[0])
-                        translated_text = argostranslate.translate.translate(sub.content, info.language, language.split('-')[0])
-                    except:
-                        st.error("Argostranslate cannot translate to this language")
-                if translator_engine == 'Google translator':
+
+                # elif translator_engine == 'Argostranslate':
+                #     try:
+                #         result = argos_translate(sub.content, info.language, language.split('-')[0])
+                #         translated_text = argostranslate.translate.translate(sub.content, info.language, language.split('-')[0])
+                #     except:
+                #         st.error("Argostranslate cannot translate to this language")
+
+                elif translator_engine == 'Google translator':
                     try:
                         translated_text = GoogleTranslator(source='auto', target=language).translate(sub.content)
                     except:
@@ -132,7 +134,7 @@ def generate_translation(whisper_size, file_path, translator_engine, languages, 
             except:
                 st.error(idio['Google translate network error'][idi])
 
-        if translator_engine == 'ChatGPT translator':
+        elif translator_engine == 'ChatGPT translator':
             try:
                 translated.append([])
                 for text in original:
@@ -141,17 +143,17 @@ def generate_translation(whisper_size, file_path, translator_engine, languages, 
             except:
                 st.error(idio['Chatgpt API or network error'][idi])
 
-        if translator_engine == 'Argostranslate':
-            translated.append([])
-            for text in original:
-                result = argos_translate(text, info.language, languages[l])
-                if result == "#There is no language package":
-                    st.error(idio['Argostranslate cannot translate to this language'][idi])
-                    break
-                else:
-                    translated_text = argostranslate.translate.translate(text, info.language, languages[l])
-                    translated[l].append(translated_text)
-                    gc.collect()
+        # elif translator_engine == 'Argostranslate':
+        #     translated.append([])
+        #     for text in original:
+        #         result = argos_translate(text, info.language, languages[l])
+        #         if result == "#There is no language package":
+        #             st.error(idio['Argostranslate cannot translate to this language'][idi])
+        #             break
+        #         else:
+        #             translated_text = argostranslate.translate.translate(text, info.language, languages[l])
+        #             translated[l].append(translated_text)
+        #             gc.collect()
     
     return original, translated
 

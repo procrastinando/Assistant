@@ -1,8 +1,8 @@
-import sys
-sys.path.insert(0, '/translator/lib/python3.9/site-packages')
-import argostranslate.package
-import argostranslate.translate
-sys.path.remove('/translator/lib/python3.9/site-packages')
+# import sys
+# sys.path.insert(0, '/translator/lib/python3.9/site-packages')
+# import argostranslate.package
+# import argostranslate.translate
+# sys.path.remove('/translator/lib/python3.9/site-packages')
 
 import streamlit as st
 import streamlit_authenticator as stauth
@@ -18,33 +18,6 @@ from deep_translator import ChatGptTranslator
 from run_telegram import open_data, update_config
 from miniapps.voice2text import generate_srt_files, generate_translation
 
-
-def argos_translate(text, from_code, to_code):
-    # Check if package is already installed
-    installed_packages = argostranslate.package.get_installed_packages()
-    installed_package = next(
-        (x for x in installed_packages if x.from_code == from_code and x.to_code == to_code), None
-    )
-    
-    if not installed_package:
-        # Update package index and get available packages
-        argostranslate.package.update_package_index()
-        available_packages = argostranslate.package.get_available_packages()
-        
-        # Find package to install
-        package_to_install = next(
-            (x for x in available_packages if x.from_code == from_code and x.to_code == to_code), None
-        )
-        
-        # Check if package is available
-        if not package_to_install:
-            return "#There is no language package"
-        
-        # Install package
-        argostranslate.package.install_from_path(package_to_install.download())
-    
-    # Translate text
-    return argostranslate.translate.translate(text, from_code, to_code)
 
 def main():
     with open('config.yaml') as file:
