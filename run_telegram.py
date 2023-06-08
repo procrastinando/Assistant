@@ -4,6 +4,7 @@ import yaml
 import time
 import datetime
 import os
+import gc
 import streamlit_authenticator as stauth
 from pytube import YouTube
 import random
@@ -105,6 +106,7 @@ def create_new_user(config, BOT_TOKEN, user_id, i):
     welcome_message = f"Welcome {complete_name}!\nYour user ID is: {user_id}\nYou can set a /password to access to your console\n{config['admin']['url']}"
 
     update_config(config, 'config.yaml')
+
     send_message(BOT_TOKEN, user_id, welcome_message)
 
 def update_config(data, data_path):
@@ -502,7 +504,7 @@ def main(BOT_TOKEN, streamlit_url, admin_id):
                                     elif user_data['location'] == '/password':
                                         config['credentials']['usernames'][user_id]['password'] = stauth.Hasher([i['message']['text']]).generate()[0]
                                         update_config(config, 'config.yaml')
-                                        send_message(BOT_TOKEN, user_id, f"{idio['Password changed!'][idi]}\n{idio['Your ID'][idi]}: {user_id}\n{idio['Access to your console here'][idi]}: http://192.168.50.182:8501")
+                                        send_message(BOT_TOKEN, user_id, f"{idio['Password changed!'][idi]}\n{idio['Your ID'][idi]}: {user_id}\n{idio['Access to your console here'][idi]}: {config['admin']['url']}")
 
                                     elif user_data['location'] == '/add_member':
                                         reply_markup = [[{'text': 'yes', 'callback_data': f"{user_id}&{1}"}]] 
@@ -658,6 +660,7 @@ def main(BOT_TOKEN, streamlit_url, admin_id):
             # update message offset
             last_message_id = resp['result'][-1]['update_id']
             url = f'https://api.telegram.org/bot{BOT_TOKEN}/getUpdates?offset={last_message_id+1}'
+            gc.collect()
 
 if __name__ == '__main__':
     for dir in ['miniapps/languages/images/', 'miniapps/youtube/', 'miniapps/voice2text/', 'users/']:

@@ -3,9 +3,97 @@ import streamlit_authenticator as stauth
 import yaml
 from yaml.loader import SafeLoader
 import os
+import random
+import string
 import pandas as pd
 
 from run_telegram import open_data, update_config
+
+def create_new_user(config, user_id, name, pa, tt, au, pe, ce, ck, cn):
+    user_data = {
+        'idiom': 'en',
+        'credentials': {
+            'share': [],
+            'azure': {}
+        },
+        'blocked': [],
+        'coins': 0.0,
+        'childs': [],
+        'location': '0',
+        'azure': {},
+        'miniapps': {
+            'mathematics': {
+                'current_score': 0.0,
+                'answer': 0,
+                'ex_rate': 20.0,
+                'fault_penalty': -1,
+                'target_score': 50.0,
+                'operations': [],
+                'homework': {
+                    'division': {
+                        'lower_num': 2,
+                        'upper_num': 10
+                    },
+                    'multiplication': {
+                        'lower_num': 2,
+                        'upper_num': 10
+                    },
+                    'rest': {
+                        'lower_num': 4,
+                        'upper_num': 32
+                    },
+                    'sum': {
+                        'lower_num': 4,
+                        'upper_num': 32
+                    }
+                }
+            },
+            'listen-write': {
+                'answer': 0,
+                'chatgpt': False,
+                'current_request': 0,
+                'ex_rate': 10.0,
+                'fault_penalty': -1,
+                'target_score': 50.0,
+                'homework': {},
+                'homework_conf': {}
+            },
+            'read-speak': {
+                'current_request': '0',
+                'difficulty': 2.0,
+                'ex_rate': 500.0,
+                'homework': {},
+                'homework_lang': {},
+                't2v-model': 'google',
+                'target_score': 50.0,
+                'v2t-model': 'whisper',
+                'voice-speed': 0.75,
+                'whisper-size': 'base'
+            },
+            'youtube': {
+                'file': {},
+                'request': {
+                    'url': 'https://www.youtube.com/shorts/WAWQluwU0yM'
+                }
+            }
+        }
+    }
+    with open(f'users/{user_id}.yaml', 'w') as file:
+        yaml.dump(user_data, file)
+
+    config['credentials']['usernames'][user_id] = {}
+    config['credentials']['usernames'][user_id]['name'] = name
+    config['credentials']['usernames'][user_id]['password'] = stauth.Hasher([pa]).generate()[0]
+
+    config['telegram']['token'] = tt
+    config['admin']['url'] = au
+    config['admin']['id'] = ad
+    config['preauthorized']['emails'] = pe
+    config['cookie']['expiry_days'] = int(ce)
+    config['cookie']['key'] = ck
+    config['cookie']['name'] = cn
+
+    update_config(config, 'config.yaml')
 
 def update_childs_credentials(user_id):
     user_data = open_data(user_id)
@@ -158,8 +246,10 @@ def start(authenticator):
                         del_childs_credentials(st.session_state["username"])
                 update_config(user_data, 'users/'+st.session_state["username"]+'.yaml')
 
-        # --- If admin 
-        if st.session_state["username"] == '649792299':
+        # --- If admin
+        with open('config.yaml', 'r') as file:
+            admin_id = yaml.safe_load(file)['admin']['id']
+        if st.session_state["username"] == admin_id:
 
             with open('config.yaml', 'r') as file:
                 config = yaml.safe_load(file)
@@ -210,25 +300,18 @@ if __name__ == '__main__':
         main()
 
     else:
-        st.title("Set up bot")
-        
-        tt = st.text_input("Set Telegram bot Token")
-        au = st.text_input("Set App URL")
+        st.title("Set up first boot")
+
         ad = st.text_input("Set admin user ID (Telegram ID)")
+        pa = st.text_input("Set admin password (Telegram ID)")
         na = st.text_input("Set name")
+        tt = st.text_input("Set Telegram bot Token")
         pe = st.text_input("Set preauthorized email")
+        au = st.text_input("Set App URL", "http://localhost:8501")
+        ce = st.text_input("Set cookie expiry days", 30)
+        ck = st.text_input("Set cookie key", ''.join(random.choice(string.ascii_lowercase) for _ in range(16)))
+        cn = st.text_input("Set cookie name", ''.join(random.choice(string.ascii_lowercase) for _ in range(16)))
 
         if st.button("Start"):
-            config['telegram']['token'] = tt
-            config['admin']['url'] = au
-            config['admin']['id'] = ad
-            config['preauthorized']['emails'] = pe
-
-            config['credentials']['usernames'][ad] = {}
-            config['credentials']['usernames'][ad]['name'] = na
-            config['credentials']['usernames'][ad]['password'] = '0'
-
-            with open('config.yaml', 'w') as file:
-                yaml.dump(config, file)
-
-            st.write("Please, restart the container")
+            create_new_user(config, ad, na, pa, tt, au, pe, ce, ck, cn)
+            st.write("Please, restart page")

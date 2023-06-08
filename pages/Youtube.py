@@ -5,6 +5,7 @@ from yaml.loader import SafeLoader
 from pytube import YouTube
 import subprocess
 import os
+import gc
 
 from run_telegram import open_data, update_config, send_message
 from miniapps.languages import clean_text
@@ -140,6 +141,8 @@ def start(authenticator):
                     update_config(user_data, 'users/'+st.session_state["username"]+'.yaml')
 
                     info_placeholder.info(idio['Finished!'][idi])
+
+            gc.collect()
 
         # Create a download button
         try:

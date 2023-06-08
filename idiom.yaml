@@ -388,9 +388,9 @@ Start:
 Select language to translate, no selection, no translation:
   en: Select languages to translate, no selection, no translation
   es: Seleccione idiomas a traducir, no iisiomas seleccionados, no habra traduccion
-Running...:
-  en: Running ...
-  es: Corriendo ...
+Transcribing:
+  en: Transcribing ...
+  es: Transcribiendo ...
 Finished!:
   en: Finished!
   es: Terminado!
@@ -409,3 +409,18 @@ Generate SRT subtitles file:
 Error using Openai API to translate the text:
   en: Error using Openai API to translate the text
   es: Error al usar la API de Openai para traducir el texto
+Select translator engine:
+  en: Select translator engine
+  es: Seleccionar motor de traduccion
+Translating:
+  en: Translating ...
+  es: Traduciendo ...
+Chatgpt API or network error:
+  en: Chatgpt API or network error
+  es: Error de conexion o Chatgpt API
+Argostranslate cannot translate to this language:
+  en: Argostranslate cannot translate to this language
+  es: Argostranslate No puede traducir a este idioma
+Google translate network error:
+  en: Google translate network error
+  es: Error de conexion de Google translate

@@ -1,16 +1,19 @@
 admin:
-  id: 
-  url: 
+  id: '123456'
+  url: http://localhost:8501
 cookie:
   expiry_days: 30
-  key: zonynnyakxjtein
-  name: ppjrsyesswuqjtj
+  key: ogjgdcktpguhguuu
+  name: ablokwwzsjadpkmb
 credentials:
   usernames:
+    '123456':
+      name: car
+      password: $2b$12$C96dkyJE5U2JsbEOQ437XurIUruolFEp2sNydsBKCsI.eSn/.4GKm
 engines:
   large: 1
   short: 1
 preauthorized:
-  emails: 
+  emails: c@d.g
 telegram:
-  token: 
+  token: 098765

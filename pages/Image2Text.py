@@ -3,6 +3,7 @@ import streamlit_authenticator as stauth
 import yaml
 from yaml.loader import SafeLoader
 import os
+import gc
 
 from run_telegram import open_data
 from miniapps.languages import add_ocr
@@ -59,6 +60,7 @@ def start(authenticator):
             if os.path.isfile(file_path):
                 os.remove(file_path)
 
+        gc.collect()
         info_placeholder.info(idio['Finished!'][idi])
 
 if __name__ == '__main__':

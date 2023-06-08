@@ -5,6 +5,7 @@ import time
 from PIL import Image
 import subprocess
 import os
+import gc
 from pytube import YouTube
 import sys
 
@@ -123,6 +124,7 @@ def main(BOT_TOKEN, arg1, admin_url):
                 run_short(BOT_TOKEN, extra, admin_url)
             except:
                 pass
+        gc.collect()
 
 if __name__ == '__main__':
 

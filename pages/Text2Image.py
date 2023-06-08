@@ -3,6 +3,7 @@ import streamlit_authenticator as stauth
 import yaml
 from yaml.loader import SafeLoader
 import random
+import gc
 
 from miniapps.text2image import Lexica
 from run_telegram import open_data
@@ -49,6 +50,9 @@ def start(authenticator):
             for i in range(num_img):
                 with cols[i]:
                     st.image(image_urls[i])
+            
+            gc.collect()
+
     except:
         st.error(idio['Error generating image'][idi])    
 
