@@ -254,14 +254,22 @@ def process_extra(BOT_TOKEN):
     with open('extra.yaml', 'w') as file:
         yaml.dump(extra, file)
 
-def main(BOT_TOKEN, streamlit_url, admin_id):
-    set_commands(BOT_TOKEN)
-    url = f'https://api.telegram.org/bot{BOT_TOKEN}/getUpdates'
+def main():
 
-    while True:
+    try:
+        # Load basic conf
+        with open('config.yaml', 'r') as file:
+            config = yaml.safe_load(file)
+        BOT_TOKEN = config['telegram']['token']
+        streamlit_url = config['admin']['url']
+        url = config['telegram']['offset']
+
+        # Delete old files and send extra jobs
         delete_old_files('miniapps/youtube/', 1800)
         delete_old_files('miniapps/voice2text/', 1800)
         process_extra(BOT_TOKEN)
+
+        # Set everything to start
         response = requests.get(url)
         resp = response.json()
 
@@ -652,31 +660,24 @@ def main(BOT_TOKEN, streamlit_url, admin_id):
                                     user_data['childs'].remove(cb_data[0])
                                     send_message(BOT_TOKEN, user_id, f"{user_id} {idio['removed succesfully!'][idi]}")
 
-                        update_config(user_data, 'users/' + user_id + '.yaml')
+                    update_config(user_data, 'users/' + user_id + '.yaml')
+                config['telegram']['offset'] = f"https://api.telegram.org/bot{BOT_TOKEN}/getUpdates?offset={i['update_id'] + 1}"
+                update_config(config, 'config.yaml')
+                gc.collect()
 
-            last_message_id = resp['result'][-1]['update_id']
-            url = f'https://api.telegram.org/bot{BOT_TOKEN}/getUpdates?offset={last_message_id+1}'
-            gc.collect()
+    except Exception as e:
+        with open('log.txt', 'a') as f:
+            f.write(f"{datetime.datetime.now()}: {e}\n")
+        print(e)
+        time.sleep(3)
+
 
 if __name__ == '__main__':
-    for dir in ['miniapps/languages/images/', 'miniapps/youtube/', 'miniapps/voice2text/', 'users/']:
-        try:
-            os.mkdir(dir)
-        except:
-            pass
 
+    # Set commands
     with open('config.yaml', 'r') as file:
-        config = yaml.safe_load(file)
-    
-    # start the bot by getting updates from the Telegram API
-    BOT_TOKEN = config['telegram']['token']
-    streamlit_url = config['admin']['url']
-    admin_id = config['admin']['id']
+        BOT_TOKEN = yaml.safe_load(file)['telegram']['token']
+    set_commands(BOT_TOKEN)
 
     while True:
-        try:
-            main(BOT_TOKEN, streamlit_url, admin_id)
-        except ValueError as e:
-           with open('log.txt', 'a') as f:
-               f.write(f"{datetime.datetime.now()}: {e}\n")
-           time.sleep(2)
+        main()

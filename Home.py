@@ -86,6 +86,7 @@ def create_new_user(config, user_id, name, pa, tt, au, pe, ce, ck, cn):
     config['credentials']['usernames'][user_id]['password'] = stauth.Hasher([pa]).generate()[0]
 
     config['telegram']['token'] = tt
+    config['telegram']['offset'] = f"https://api.telegram.org/bot{tt}/getUpdates"
     config['admin']['url'] = au
     config['admin']['id'] = ad
     config['preauthorized']['emails'] = pe
@@ -319,4 +320,4 @@ if __name__ == '__main__':
                     os.mkdir(dir_path)
 
             create_new_user(config, ad, na, pa, tt, au, pe, ce, ck, cn)
-            st.write("Please, restart page")
+            st.write("Please, restart container")
