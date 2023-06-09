@@ -103,7 +103,7 @@ def run_large(BOT_TOKEN, extra, admin_url):
                 idi = 'en'
 
             if 'voice2text' in extra_data: # user_id|voice2text|whisper|tiny
-                media_file_path = f"miniapps/voice2text/{user_id}/{user_id}.oga"
+                media_file_path = f"miniapps/voice2text/{extra_data[0]}/{extra_data[0]}.oga"
                 text = generate_transcription(extra_data[3], media_file_path)
                 os.remove(media_file_path)
                 put_extra(f"{extra_data[0]}|message|{text}")
@@ -114,16 +114,21 @@ def run_large(BOT_TOKEN, extra, admin_url):
 
 def main(BOT_TOKEN, arg1, admin_url):
     while True:
-        time.sleep(1) # to not overload the processor
-        with open('extra.yaml', 'r') as file:
-            extra = yaml.safe_load(file)
+        try:
+            time.sleep(1) # to not overload the processor
+            with open('extra.yaml', 'r') as file:
+                extra = yaml.safe_load(file)
 
-        if arg1 == 'short':
-            run_short(BOT_TOKEN, extra, admin_url)
+            if arg1 == 'short':
+                run_short(BOT_TOKEN, extra, admin_url)
 
-        elif arg1 == 'large':
-            run_large(BOT_TOKEN, extra, admin_url)
-            run_short(BOT_TOKEN, extra, admin_url)
+            elif arg1 == 'large':
+                run_large(BOT_TOKEN, extra, admin_url)
+                run_short(BOT_TOKEN, extra, admin_url)
+
+        except Exception as e:
+            with open('log.txt', 'a') as f:
+                f.write(f"{datetime.datetime.now()}: {e}\n")
 
 if __name__ == '__main__':
 
