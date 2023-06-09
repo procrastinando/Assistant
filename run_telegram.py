@@ -450,7 +450,11 @@ def main():
                                         url_media = f'https://api.telegram.org/file/bot{BOT_TOKEN}/' + response_media['result']["file_path"] # https://api.telegram.org/file/bot<token>/<file_path>
                                         response = requests.get(url_media)
                                         response.raise_for_status()
-                                        with open(f"miniapps/voice2text/{user_id}", 'wb') as f:
+
+                                        if not os.path.exists(f"miniapps/voice2text/{user_id}"):
+                                            os.mkdir(f"miniapps/voice2text/{user_id}")
+
+                                        with open(f"miniapps/voice2text/{user_id}/{user_id}.oga", 'wb') as f:
                                             f.write(response.content)
                                     
                                         reply_markup = [[]]

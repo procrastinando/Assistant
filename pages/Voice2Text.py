@@ -74,7 +74,9 @@ def start(authenticator):
             languages = st.multiselect(idio['Select language to translate, no selection, no translation'][idi], lang_list)
 
             if languages:
-                translator_engine = st.selectbox(idio['Select translator engine'][idi], ['Argostranslate', '', 'ChatGPT translator'])
+                translator_engine = st.selectbox(idio['Select translator engine'][idi], ['Google translator', 'ChatGPT translator'])
+            else:
+                translator_engine = None
 
             check_srt = st.checkbox(idio['Generate SRT subtitles file'][idi])
             if check_srt:
@@ -90,7 +92,7 @@ def start(authenticator):
                     info_placeholder.info(idio['Transcribing'][idi]) 
                     
                     file_path = file_dir + os.listdir(file_dir)[0]
-                    original_srt, translated_srts = generate_srt_files(whisper_size.split("-")[1], file_path, translator_engine, languages, beam_size, user_data)
+                    original_srt, translated_srts = generate_srt_files(whisper_size.split("-")[1], file_path, translator_engine, languages, beam_size, user_data, idio, idi)
 
                     files = os.listdir(file_dir)
                     for media_file in files:
@@ -111,7 +113,7 @@ def start(authenticator):
                     
                     file_path = file_dir + os.listdir(file_dir)[0]
 
-                    original, translated = generate_translation(whisper_size, file_path, translator_engine, languages, user_data)
+                    original, translated = generate_translation(whisper_size, file_path, translator_engine, languages, user_data, idio, idi)
 
                     st.divider()
                     for o in original:

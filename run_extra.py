@@ -103,7 +103,7 @@ def run_large(BOT_TOKEN, extra, admin_url):
                 idi = 'en'
 
             if 'voice2text' in extra_data: # user_id|voice2text|whisper|tiny
-                media_file_path = f"miniapps/voice2text/{extra_data[0]}"
+                media_file_path = f"miniapps/voice2text/{user_id}/{user_id}.oga"
                 text = generate_transcription(extra_data[3], media_file_path)
                 os.remove(media_file_path)
                 put_extra(f"{extra_data[0]}|message|{text}")

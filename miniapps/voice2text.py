@@ -44,7 +44,7 @@ def format_timestamp(timestamp):
 #             argostranslate.package.install_from_path(package_to_install.download())
 #             return True
 
-def generate_srt_files(whisper_size, file_path, translator_engine, languages, beam_size, user_data):
+def generate_srt_files(whisper_size, file_path, translator_engine, languages, beam_size, user_data, idio, idi):
     # Transcribe audio to text
     model_size = whisper_size
     model = WhisperModel(model_size, device="cpu", compute_type="int8")
@@ -78,7 +78,7 @@ def generate_srt_files(whisper_size, file_path, translator_engine, languages, be
                     try:
                         translated_text = ChatGptTranslator(api_key=user_data['credentials']['openai'], target=language).translate(text=sub.content)
                     except:
-                        st.error("Chatgpt API or network error")
+                        st.error(idio['Chatgpt API or network error'][idi])
 
                 # elif translator_engine == 'Argostranslate':
                 #     try:
@@ -91,7 +91,7 @@ def generate_srt_files(whisper_size, file_path, translator_engine, languages, be
                     try:
                         translated_text = GoogleTranslator(source='auto', target=language).translate(sub.content)
                     except:
-                        st.error("Google translate network error")
+                        st.error(idio['Google translate network error'][idi])
                 
                 translated_sub = srt.Subtitle(index=sub.index,
                                             start=sub.start,
@@ -110,7 +110,7 @@ def generate_srt_files(whisper_size, file_path, translator_engine, languages, be
 
     return original_srt, translated_srts
 
-def generate_translation(whisper_size, file_path, translator_engine, languages, user_data):
+def generate_translation(whisper_size, file_path, translator_engine, languages, user_data, idio, idi):
     model_size = whisper_size.split("-")[1]
     if torch.cuda.is_available():
         model = WhisperModel(model_size, device="cuda", compute_type="float16")
@@ -128,7 +128,6 @@ def generate_translation(whisper_size, file_path, translator_engine, languages, 
             try:
                 translated.append([])
                 for text in original:
-                    translated_text = ChatGptTranslator(api_key=user_data['credentials']['openai'], target=languages[l]).translate(text=text)
                     translated_text = GoogleTranslator(source='auto', target=languages[l]).translate(text)
                     translated[l].append(translated_text)
             except:
@@ -160,7 +159,12 @@ def generate_translation(whisper_size, file_path, translator_engine, languages, 
 def generate_transcription(whisper_size, file_path):
     # Transcribe audio to text
     model_size = whisper_size
-    model = WhisperModel(model_size, device="cpu", compute_type="int8")
+
+    if torch.cuda.is_available():
+        model = WhisperModel(model_size, device="cuda", compute_type="float16")
+    else:
+        model = WhisperModel(model_size, device="cpu", compute_type="int8")
+
     segments, info = model.transcribe(file_path)
 
     text = ''
