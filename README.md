@@ -80,9 +80,6 @@ RUN chmod +x /app/start.sh
 
 ENTRYPOINT ["./start.sh"]
 ```
-To do:
-* Show statistics of activity (user and members)
-* Create a priority scale
 
 Docker compose:
 
@@ -94,3 +91,8 @@ services:
     ports:
       - "85:8501"
 ```
+To do:
+* Show statistics of activity (user and members)
+* Create a priority scale
+* Create a user agree and welcome message
+* Create a news distribution function
