@@ -96,3 +96,4 @@ To do:
 * Create a priority scale
 * Create a user agree and welcome message
 * Create a news distribution function
+* Register with discord?
