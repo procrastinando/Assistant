@@ -80,6 +80,9 @@ RUN chmod +x /app/start.sh
 
 ENTRYPOINT ["./start.sh"]
 ```
+To do:
+* Show statistics of activity (user and members)
+* Create a priority scale
 
 Docker compose:
 
