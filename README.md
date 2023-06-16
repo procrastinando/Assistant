@@ -91,3 +91,9 @@ services:
     ports:
       - "85:8501"
 ```
+To do:
+* Show statistics of activity (user and members)
+* Create a priority scale
+* Create a user agree and welcome message
+* Create a news distribution function
+* Register with discord?

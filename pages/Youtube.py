@@ -138,7 +138,7 @@ def start(authenticator):
                 if st.button(f"⏩ {idio['Select file settings'][idi]}"):
                     start_time = time.time()
                     info_placeholder = st.empty()
-                    info_placeholder.info(idio['Running...'][idi])
+                    info_placeholder.info(idio['Transcribing'][idi])
 
                     yt = YouTube(url).streams
                     yt.filter(type="audio", abr=abitrate)[0].download(output_path='miniapps/youtube/', filename=st.session_state["username"]+'a')
