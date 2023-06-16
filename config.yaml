@@ -1,17 +1,23 @@
 admin:
-  id: 
-  url: 
+  id: '649792299'
+  url: http://localhost:8501/
 cookie:
-  expiry_days: 
-  key: 
-  name: 
+  expiry_days: 1
+  key: yfenhtmlfjawsawe
+  name: sgxtbrlkejgannxn
 credentials:
-  usernames: {}
+  usernames:
+    '5029407540':
+      name: KENZO
+      password: '0'
+    '649792299':
+      name: Carlos
+      password: $2b$12$aympWXLZSDHr7pmOApc32u3ufsKBZXlXCI8qQLoNduoT3n1wqDWO.
 engines:
   large: 1
   short: 1
 preauthorized:
-  emails: 
+  emails: cibarcena4@outlook.com
 telegram:
-  offset: 
-  token: 
+  offset: https://api.telegram.org/bot6286436811:AAGmE8GL8wLqyZzvxtaRhgWRhrncHAP_Dws/getUpdates?offset=888120724
+  token: 6286436811:AAGmE8GL8wLqyZzvxtaRhgWRhrncHAP_Dws

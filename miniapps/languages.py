@@ -34,9 +34,9 @@ def voice2text(BOT_TOKEN, resp_media, user_data):
         if user_data['miniapps']['read-speak']['v2t-model'] == 'whisper':
             whisper_size = user_data['miniapps']['read-speak']['whisper-size'] # Choose model size
             if torch.cuda.is_available():
-                model = WhisperModel(model_size, device="cuda", compute_type="float16")
+                model = WhisperModel(whisper_size, device="cuda", compute_type="float16")
             else:
-                model = WhisperModel(model_size, device="cpu", compute_type="int8")
+                model = WhisperModel(whisper_size, device="cpu", compute_type="int8")
             segments, info = model.transcribe('miniapps/languages/v2t.oga')
             result = ''.join([segment.text for segment in segments])
         elif user_data['miniapps']['read-speak']['v2t-model'] == 'openai':
@@ -71,7 +71,7 @@ def text2voice(config, user_data, type_hw):
             pass
 
     if user_data['miniapps']['read-speak']['t2v-model'] == 'azure':
-        speech_config = speechsdk.SpeechConfig(subscription=config['azure']['speech_key'], region=config['azure']['service_region'])
+        speech_config = speechsdk.SpeechConfig(subscription=user_data['azure']['token'], region=user_data['azure']['region'])
         audio_config = speechsdk.AudioConfig(filename="miniapps/languages/t2v.mp3")
         synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config, audio_config=audio_config)
         result = synthesizer.speak_text_async(text).get()

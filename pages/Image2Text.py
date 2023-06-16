@@ -4,8 +4,9 @@ import yaml
 from yaml.loader import SafeLoader
 import os
 import gc
+import time
 
-from run_telegram import open_data
+from run_telegram import open_data, add_to_data
 from miniapps.languages import add_ocr
 
 def main():
@@ -46,8 +47,9 @@ def start(authenticator):
                 f.write(file.getbuffer())
 
     add_lang_hw = st.button(idio['Read images'][idi])
-
+ 
     if add_lang_hw:
+        start_time = time.time()
         info_placeholder = st.empty()
         info_placeholder.info(idio['Running...'][idi])
 
@@ -60,8 +62,9 @@ def start(authenticator):
             if os.path.isfile(file_path):
                 os.remove(file_path)
 
-        gc.collect()
         info_placeholder.info(idio['Finished!'][idi])
+        add_to_data(st.session_state["username"], '/image2text', start_time)
+        gc.collect()
 
 if __name__ == '__main__':
     st.set_page_config(

@@ -4,9 +4,10 @@ import yaml
 from yaml.loader import SafeLoader
 import random
 import gc
+import time
 
 from miniapps.text2image import Lexica
-from run_telegram import open_data
+from run_telegram import open_data, add_to_data
 
 def main():
     with open('config.yaml') as file:
@@ -46,11 +47,13 @@ def start(authenticator):
     
     try:
         if st.button(idio['Generate images'][idi]):
+            start_time = time.time()
             cols = st.columns(num_img)
             for i in range(num_img):
                 with cols[i]:
                     st.image(image_urls[i])
-            
+
+            add_to_data(st.session_state["username"], '/text2image', start_time)
             gc.collect()
 
     except:

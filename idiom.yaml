@@ -424,3 +424,81 @@ Argostranslate cannot translate to this language:
 Google translate network error:
   en: Google translate network error
   es: Error de conexion de Google translate
+Add contact:
+  en: Add new contact
+  es: Agregar nuevo contacto
+This user has not registered yet, ask her/him to register:
+  en: This user has not registered yet, ask her/him to register
+  es: Este usuario no se ha registrado aun, pidale que se registre
+Insert a new user ID to add to your contacts:
+  en: Insert a new user ID to add to your contacts
+  es: Ingrese el ID del usuario a agregar a tus contactos
+Send voice to:
+  en: Send voice to
+  es: Enviar mensaje de voz a
+or select other contact:
+  en: or select other contact
+  es: o seleccione otro contacto
+You said:
+  en: You said
+  es: Has dicho
+Error during the translation:
+  en: Error during the translation
+  es: Error durante la traduccion
+Error during text to voice generation:
+  en: Error during text to voice generation
+  es: Error durante la generacion de texto a voz
+Network error:
+  en: Network error
+  es: Error de conexion
+Error during transcription:
+  en: Error during transcription
+  es: Error durante la transcripcion
+Remove contact:
+  en: Remove contact
+  es: Eliminar contacto
+Select contact to remove:
+  en: Select contact to remove
+  es: Seleccione contacto a eliminar
+Contact deleted:
+  en: Contact deleted
+  es: Contacto eliminado
+Select language to translate your voice messages to:
+  en: Select language to translate your voice messages to
+  es: Seleccione idioma a traducir tus mensajes de voz para
+Contact added:
+  en: Contact added
+  es: Contacto agregado
+Contact:
+  en: Contact
+  es: Contacto
+You do not have contacts:
+  en: You do not have contacts
+  es: No tienes contactos
+Add new contact, insert ID:
+  en: Add new contact, insert ID
+  es: Agregar nuevo contacto, ingrese ID
+Language and models settings:
+  en: Language and models settings
+  es: Modelos de lenguage y ajustes
+Add new contact:
+  en: Add new contact
+  es: Agregar nuevo contacto
+Edit or delete contact:
+  en: Edit or delete contact
+  es: Editar o eliminar contacto
+Contact translation language:
+  en: Contact translation language
+  es: Idioma a traducir del contacto
+Update contact:
+  en: Update contact
+  es: Actualizar contacto
+Recent activity:
+  en: Recent activity
+  es: Acttividad reciente
+Filter requests:
+  en: Filter requests
+  es: Filtrar requets
+Text to voice:
+  en: Text to voice
+  es: Texto a voz

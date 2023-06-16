@@ -12,10 +12,11 @@ import os
 import pandas as pd
 import shutil
 import torch
+import gc
+import time
 from faster_whisper import WhisperModel
-from deep_translator import ChatGptTranslator
 
-from run_telegram import open_data, update_config
+from run_telegram import open_data, update_config, add_to_data
 from miniapps.voice2text import generate_srt_files, generate_translation
 
 
@@ -83,6 +84,8 @@ def start(authenticator):
                 beam_size = st.number_input(idio['Select beam size (in seconds) zero means no beam'][idi], min_value=0, value=5)
 
             if st.button(idio['Start'][idi]):
+                start_time = time.time()
+
                 for media_file in files:
                     if media_file.endswith(".srt"):
                         os.remove(file_dir + media_file)
@@ -125,6 +128,9 @@ def start(authenticator):
                             st.write(tt)
                     
                     info_placeholder.info(idio['Finished!'][idi])
+
+                add_to_data(st.session_state["username"], '/voice2text', start_time)
+                gc.collect()
 
     if os.listdir('miniapps/voice2text/' + st.session_state["username"] + '/'):
         files = os.listdir('miniapps/voice2text/' + st.session_state["username"] + '/')

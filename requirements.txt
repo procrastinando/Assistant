@@ -11,3 +11,5 @@ pytube
 deep-translator
 srt
 psutil
+elevenlabslib
+pytz

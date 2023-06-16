@@ -3,11 +3,13 @@ import json
 import yaml
 import time
 import datetime
+import pandas as pd
 import os
 import gc
 import streamlit_authenticator as stauth
 from pytube import YouTube
 import random
+import pytz
 
 from miniapps.text2image import Lexica
 from miniapps.mathematics import mathematics, random_question
@@ -36,6 +38,13 @@ def create_new_user(config, BOT_TOKEN, user_id, i):
         'location': '0',
         'azure': {},
         'miniapps': {
+            'walkie_talkie': {
+                'whisper-size': 'whisper-tiny',
+                'default': '0',
+                'contacts': {},
+                'translator_engine': 'Google translator',
+                't2v-model': 'Google TTS',
+            },
             'mathematics': {
                 'current_score': 0.0,
                 'answer': 0,
@@ -122,7 +131,7 @@ def set_commands(BOT_TOKEN):
     url = f'https://api.telegram.org/bot{BOT_TOKEN}/setMyCommands'
     headers = {"Content-Type": "application/json"}
     data = {
-        "commands": [{"command": "settings", "description": "Manage your account ⚙️"}, {"command": "image2text", "description": "Image to text (OCR) 🅰"}, {"command": "teacher", "description": "AI Teacher assistant 📚"}, {"command": "text2image", "description": "AI image generator 📷"}, {"command": "voice2text", "description": "AI voice to text 🎙"}, {"command": "youtube", "description": "Youtube downloader 📺"}]
+        "commands": [{"command": "settings", "description": "Manage your account ⚙️"}, {"command": "image2text", "description": "Image to text (OCR) 🅰"}, {"command": "teacher", "description": "AI Teacher assistant 📚"}, {"command": "text2image", "description": "AI image generator 📷"}, {"command": "voice2text", "description": "AI voice to text 🎙"}, {"command": "walkie_talkie", "description": "AI walkie talkie 📲"}, {"command": "youtube", "description": "Youtube downloader 📺"}]
         }
     data = json.dumps(data)
     resp = requests.post(url, data=data, headers=headers)
@@ -230,6 +239,8 @@ def process_extra(BOT_TOKEN):
         extra = yaml.safe_load(file)
 
     for a in extra['answer']:
+        start_time = time.time()
+
         cb_data = a.split("|")
 
         if "message" in cb_data:
@@ -245,14 +256,24 @@ def process_extra(BOT_TOKEN):
                 send_message(BOT_TOKEN, cb_data[0], cb_data[4])
 
         elif "video" in cb_data:
-            try:
+            if os.path.getsize(cb_data[3]) < 50*1024*1024:
                 send_video(BOT_TOKEN, cb_data[0], cb_data[2], cb_data[3])
-            except:
+            else:
                 send_message(BOT_TOKEN, cb_data[0], cb_data[4])
+
+        add_to_data(cb_data[0], 'others', start_time)
 
     extra['answer'] = []
     with open('extra.yaml', 'w') as file:
         yaml.dump(extra, file)
+
+def add_to_data(user, job_type, start_time):
+    data = pd.read_csv('data.csv')
+    current_date_time = datetime.datetime.now(pytz.utc).strftime('%Y-%m-%d-%H:%M:%S')
+    total_time = (time.time() - start_time) / 60
+    new_row = pd.DataFrame({'date': [current_date_time], 'User': [user], 'job_type': [job_type], 'time': [total_time]})
+    data = pd.concat([data, new_row], ignore_index=True)
+    data.to_csv('data.csv', index=False)
 
 def main():
 
@@ -267,6 +288,7 @@ def main():
         # Delete old files and send extra jobs
         delete_old_files('miniapps/youtube/', 1800)
         delete_old_files('miniapps/voice2text/', 1800)
+        delete_old_files('miniapps/walkie_talkie/', 1800)
         process_extra(BOT_TOKEN)
 
         # Set everything to start
@@ -370,7 +392,7 @@ def main():
                                     user_data['location'] = i['message']['text']
                                     send_inline(BOT_TOKEN, user_id, f"=====> {idio['List of read-speak'][idi]} <=====", reply_markup)
 
-                                elif i['message']['text'] == '/settings':
+                                elif i['message']['text'] == '/settings': # <<====
                                     send_settings_keyboard(BOT_TOKEN, user_id, idio['Settings'][idi])
                                 
                                 elif i['message']['text'] == '/teacher': # <<====
@@ -387,6 +409,20 @@ def main():
                                 elif i['message']['text'] == '/voice2text': # <<====
                                     user_data['location'] = i['message']['text']
                                     send_message(BOT_TOKEN, user_id, idio['Send audio/video to transcribe or generate subtitles (25Mb limit)'][idi])
+                                
+                                elif i['message']['text'] == '/walkie_talkie': # <<====
+                                    user_data['location'] = i['message']['text']
+
+                                    if user_data['miniapps']['walkie_talkie']['contacts'] == {}:
+                                        send_message(BOT_TOKEN, user_id, idio['Insert a new user ID to add to your contacts'][idi])
+
+                                    else:
+                                        reply_markup = [[{'text': idio['Add contact'][idi], 'callback_data': "add#"}]]
+                                        for l in list(user_data['miniapps']['walkie_talkie']['contacts'].keys()):
+                                            reply_markup.append([{'text': f"{l} - {config['credentials']['usernames'][l]['name']}", 'callback_data': f"{l}#"}]) # 123456 - carl
+
+                                        text = f"{idio['Send voice to'][idi]} {l} - {config['credentials']['usernames'][l]['name']}, {idio['or select other contact'][idi]}"
+                                        send_inline(BOT_TOKEN, user_id, text, reply_markup)
 
                                 elif i['message']['text'] == '/youtube': # <<====
                                     user_data['location'] = i['message']['text']
@@ -394,6 +430,8 @@ def main():
 
                                 # If there is an entity (url), try to request youtube
                                 elif user_data['location'] == '/youtube': # <<====
+                                    start_time = time.time()
+
                                     try:
                                         yt = YouTube(i['message']['text'])
                                         user_data['miniapps']['youtube']['request']['fname'] = yt.title
@@ -429,6 +467,8 @@ def main():
                                         user_data['location'] = 0
                                         send_message(BOT_TOKEN, user_id, idio["The video/audio can not be downloaded"][idi])
 
+                                    add_to_data(user_id, '/youtube', start_time)
+
                             elif 'voice' in i['message']:
 
                                 if user_data['location'] == '/read_speak':
@@ -463,6 +503,16 @@ def main():
                                         reply_markup[0].append({'text': 'Openai', 'callback_data': 'openai-large'})
                                         send_inline(BOT_TOKEN, user_id, idio['Whisper size (the larger, the slower)'][idi], reply_markup)
 
+                                elif user_data['location'] == '/walkie_talkie':
+                                    if i['message']['voice']['duration'] < 16:
+                                        with open('extra.yaml', 'r') as file:
+                                            extra = yaml.safe_load(file)
+                                            extra['short'].append(f"{user_id}|walkie_talkie|{i['message']['voice']['file_id']}|{i['message']['message_id']}|{user_data['miniapps']['walkie_talkie']['default']}") # user_id|walkie_talkie|file_id|message_id|contact
+                                        with open('extra.yaml', 'w') as file:
+                                            yaml.dump(extra, file)
+                                    else:
+                                        send_message(BOT_TOKEN, user_id, idio['Audio lenght limit is 15 seconds'][idi])
+
                             elif 'photo' in i['message']:
 
                                 if user_data['location'] == '/image2text':
@@ -483,13 +533,36 @@ def main():
 
                             elif 'text' in i['message']:
 
-                                if user_data['location'] == '/text2image': # <<====
+                                if user_data['location'] == '/walkie_talkie':
+                                    if i['message']['text'] in config['credentials']['usernames']:
+                                        # select language
+                                        lang_list = ['ar', 'az', 'ca', 'zh-CN', 'cs', 'da', 'nl', 'en', 'eo', 'fi', 'fr', 'de', 'el', 'he', 'hi', 'hu', 'id', 'ga', 'it', 'ja', 'ko', 'fa', 'pl', 'pt', 'ru', 'sk', 'es', 'sv', 'tr', 'uk']
+                                        lang_names = ['Arabic','Azerbaijani','Catalan','Chinese (Simplified)','Czech','Danish','Dutch','English','Esperanto','Finnish','French','German','Greek','Hebrew','Hindi','Hungarian','Indonesian','Irish','Italian','Japanese','Korean','Persian','Polish','Portuguese','Russian','Slovak','Spanish','Swedish','Turkish','Ukrainian']
+
+                                        reply_markup = []
+                                        row = []
+                                        for j in range(len(lang_list)):
+                                            row.append({'text': lang_names[j], 'callback_data': f"lang#{lang_list[j]}#{i['message']['text']}"})
+                                            if (j+1) % 5 == 0:
+                                                reply_markup.append(row)
+                                                row = []
+                                        if row:
+                                            reply_markup.append(row)
+
+                                        text = f"{idio['Select language to translate your voice messages to'][idi]}:\n {config['credentials']['usernames'][i['message']['text']]['name']} - {i['message']['text']}"
+                                        send_inline(BOT_TOKEN, user_id, text, reply_markup)
+
+                                    else:
+                                        text = idio['This user has not registered yet, ask her/him to register'][idi]
+                                        send_message(BOT_TOKEN, user_id, text)
+
+                                elif user_data['location'] == '/text2image': # <<====
                                     reply_markup = [[]]
                                     for m in range(5):
                                         reply_markup[0].append({'text': str(m+1), 'callback_data': f"{i['message']['text']}+{m+1}"})
                                     send_inline(BOT_TOKEN, user_id, idio['Select number or images'][idi], reply_markup)
 
-                                if user_data['location'] == '/mathematics': # <<====
+                                elif user_data['location'] == '/mathematics': # <<====
                                     try: # try to make a calculation
                                         user_data, message = mathematics(user_data, float(i['message']['text']), idio, idi)
                                         send_message(BOT_TOKEN, user_id, message)
@@ -525,13 +598,63 @@ def main():
 
                         elif 'callback_query' in i:
 
+                            # Walkie talkie
+                            if "#" in i['callback_query']['data']: # add# or 123456# 
+                                cb_data = i['callback_query']['data'].split("#")
+
+                                if 'lang' in cb_data: # lang#lang_code#contact
+                                    user_data['miniapps']['walkie_talkie']['contacts'][cb_data[2]] = cb_data[1]
+                                    user_data['miniapps']['walkie_talkie']['default'] = cb_data[2]
+
+                                    reply_markup = [[{'text': idio['Add contact'][idi], 'callback_data': "add#"}, {'text': idio['Remove contact'][idi], 'callback_data': "remove#"}]]
+                                    for l in list(user_data['miniapps']['walkie_talkie']['contacts'].keys()):
+                                        reply_markup.append([{'text': f"{config['credentials']['usernames'][l]['name']} - {l}", 'callback_data': f"{l}#"}]) # carl - 123456
+                                    text = f"{idio['Contact added'][idi]}!\n{idio['Send voice to'][idi]} {config['credentials']['usernames'][l]['name']} - {l}, {idio['or select other contact'][idi]}"
+                                    send_inline(BOT_TOKEN, user_id, text, reply_markup)
+
+                                elif 'add' in cb_data:
+                                    send_message(BOT_TOKEN, user_id, idio['Insert a new user ID to add to your contacts'][idi])
+
+                                elif 'remove' in cb_data: # select contact to remove
+                                    reply_markup = []
+                                    for l in list(user_data['miniapps']['walkie_talkie']['contacts'].keys()):
+                                        reply_markup.append([{'text': f"{l} - {config['credentials']['usernames'][l]['name']}", 'callback_data': f"{l}#delete"}]) # 123456 - carl
+
+                                    text = f"{idio['Select contact to remove'][idi]}"
+                                    send_inline(BOT_TOKEN, user_id, text, reply_markup)
+                                
+                                elif 'delete' in cb_data: # confirm detele contact
+                                    user_data['miniapps']['walkie_talkie']['contacts'].remove(cb_data[1])
+                                    if user_data['miniapps']['walkie_talkie']['default'] == cb_data[1]:
+                                        if user_data['miniapps']['walkie_talkie']['contacts'] == []:
+                                            send_message(BOT_TOKEN, user_id, idio['Insert a new user ID to add to your contacts'][idi])
+                                        else:
+                                            user_data['miniapps']['walkie_talkie']['default'] = user_data['miniapps']['walkie_talkie']['contacts'][0]
+                                    else:
+                                        reply_markup = [[{'text': idio['Add contact'][idi], 'callback_data': "add#"}, {'text': idio['Remove contact'][idi], 'callback_data': "remove#"}]]
+                                        for l in list(user_data['miniapps']['walkie_talkie']['contacts'].keys()):
+                                            reply_markup.append([{'text': f"{l} - {config['credentials']['usernames'][l]['name']}", 'callback_data': f"{l}#"}]) # 123456 - carl
+
+                                        text = f"{idio['Contact deleted'][idi]}!\n{idio['Send voice to'][idi]} {config['credentials']['usernames'][l]['name']} - {l}, {idio['or select other contact'][idi]}"
+                                        send_inline(BOT_TOKEN, user_id, text, reply_markup)
+
+                                else: # 
+                                    user_data['miniapps']['walkie_talkie']['default'] = cb_data[0]
+
+                                    reply_markup = [[{'text': idio['Add contact'][idi], 'callback_data': "add#"}, {'text': idio['Remove contact'][idi], 'callback_data': "remove#"}]]
+                                    for l in list(user_data['miniapps']['walkie_talkie']['contacts'].keys()):
+                                        reply_markup.append([{'text': f"{l} - {config['credentials']['usernames'][l]['name']}", 'callback_data': f"{l}#"}]) # 123456 - carl
+
+                                    text = f"{idio['Send voice to'][idi]} {config['credentials']['usernames'][l]['name']} - {l}, {idio['or select other contact'][idi]}"
+                                    send_inline(BOT_TOKEN, user_id, text, reply_markup)
+
                             # Voice2text
-                            if "-" in i['callback_query']['data']: # whisper-tiny
+                            elif "-" in i['callback_query']['data']: # whisper-tiny
                                 cb_data = i['callback_query']['data'].split("-")
 
                                 if cb_data[0] == 'openai':
                                     send_message(BOT_TOKEN, user_id, "Not developed yet")
-                                else: # [whisper, tiny]
+                                elif cb_data[0] == 'whisper':
                                     with open('extra.yaml', 'r') as file:
                                         extra = yaml.safe_load(file)
                                     extra['large'].append(f"{user_id}|voice2text|{cb_data[0]}|{cb_data[1]}") # user_id|voice2text|whisper|tiny
@@ -540,7 +663,7 @@ def main():
                                         yaml.dump(extra, file)
 
                             # Youtube
-                            if "*" in i['callback_query']['data']:
+                            elif "*" in i['callback_query']['data']: # youtube
                                 cb_data = i['callback_query']['data'].split("*")
 
                                 # 1. the resolution/audio has been chosen, the bitrate will be sent
@@ -559,7 +682,7 @@ def main():
                                     if user_data['miniapps']['youtube']['file']['resolution'] == 'audio':
                                         with open('extra.yaml', 'r') as file:
                                             extra = yaml.safe_load(file)
-                                            extra['short'].append(f"{user_id}|youtube|audio|{clean_text(user_data['miniapps']['youtube']['request']['fname'])}|{i['callback_query']['data']}")
+                                            extra['large'].append(f"{user_id}|youtube|audio|{clean_text(user_data['miniapps']['youtube']['request']['fname'])}|{i['callback_query']['data']}")
                                         with open('extra.yaml', 'w') as file:
                                             yaml.dump(extra, file)
 
@@ -569,7 +692,7 @@ def main():
                                         if len(user_data['miniapps']['youtube']['file']['task'][cb_data[1]]) == 1:
                                             with open('extra.yaml', 'r') as file:
                                                 extra = yaml.safe_load(file)
-                                                extra['short'].append(f"{user_id}|youtube|video|{clean_text(user_data['miniapps']['youtube']['request']['fname'])}|{i['callback_query']['data']}")
+                                                extra['large'].append(f"{user_id}|youtube|video|{clean_text(user_data['miniapps']['youtube']['request']['fname'])}|{i['callback_query']['data']}")
                                             with open('extra.yaml', 'w') as file:
                                                 yaml.dump(extra, file)
                                         # If there are several framerates, send fps inline
@@ -583,12 +706,13 @@ def main():
                                 elif len(cb_data) == 4:
                                     with open('extra.yaml', 'r') as file:
                                         extra = yaml.safe_load(file)
-                                        extra['short'].append(f"{user_id}|youtube|video|{clean_text(user_data['miniapps']['youtube']['request']['fname'])}|{i['callback_query']['data']}")
+                                        extra['large'].append(f"{user_id}|youtube|video|{clean_text(user_data['miniapps']['youtube']['request']['fname'])}|{i['callback_query']['data']}")
                                     with open('extra.yaml', 'w') as file:
                                         yaml.dump(extra, file)
 
                             # Generate image
-                            elif "+" in i['callback_query']['data']:
+                            elif "+" in i['callback_query']['data']: # text to image
+                                start_time = time.time()
                                 try:
                                     cb_data = i['callback_query']['data'].split("+")
                                     lex = Lexica(query=cb_data[0]).images()
@@ -596,12 +720,13 @@ def main():
                                     send_mediagroup(BOT_TOKEN, user_id, image_urls)
                                 except:
                                     send_message(BOT_TOKEN, user_id, idio['Error generating image'][idi])
+                                add_to_data(user_id, '/text2image', start_time)
 
                             # Change language
-                            elif "!" in i['callback_query']['data']:
+                            elif "!" in i['callback_query']['data']: # change language
                                 cb_data = i['callback_query']['data'].split("!")
                                 user_data['idiom'] = cb_data[0]
-                                send_message(BOT_TOKEN, user_id, f"{idio['Current language'][idi]}: {cb_data[0]}")
+                                send_message(BOT_TOKEN, user_id, f"{idio['Current language'][cb_data[0]]}: {cb_data[0]}")
 
                             # sum coins
                             elif "#" in i['callback_query']['data']:

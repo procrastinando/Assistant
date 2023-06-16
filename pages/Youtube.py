@@ -6,8 +6,9 @@ from pytube import YouTube
 import subprocess
 import os
 import gc
+import time
 
-from run_telegram import open_data, update_config, send_message
+from run_telegram import open_data, update_config, send_message, add_to_data
 from miniapps.languages import clean_text
 
 def download_button(file_path, label, file_name, mime):
@@ -54,7 +55,7 @@ def start(authenticator):
         url = st.text_input(idio['Insert YouTube URL'][idi], user_data['miniapps']['youtube']['request']['url'])
 
         if st.button(f"⏩ {idio['Analyze URL'][idi]}"):
-
+            start_time = time.time()
             try:
                 yt = YouTube(url)
                 user_data['miniapps']['youtube']['request']['fname'] = yt.title
@@ -84,6 +85,8 @@ def start(authenticator):
 
             except:
                 st.error(idio['The video/audio can not be downloaded'][idi])
+            
+            add_to_data(user_id, '/youtube', start_time)
 
         # Make a download settings list
         if len(user_data['miniapps']['youtube']['file']) > 0:
@@ -103,6 +106,7 @@ def start(authenticator):
             if ftype != 'audio':
                 if len(user_data['miniapps']['youtube']['file']['task'][ftype]) == 1:
                     if st.button(f"⏩ {idio['Select file settings'][idi]}"):
+                        start_time = time.time()
                         yt = YouTube(url).streams
                         yt.filter(type="video", res=ftype)[0].download(output_path='miniapps/youtube/', filename=st.session_state["username"]+'v')
                         yt.filter(type="audio", abr=abitrate)[0].download(output_path='miniapps/youtube/', filename=st.session_state["username"]+'a')
@@ -111,6 +115,7 @@ def start(authenticator):
                         user_data['miniapps']['youtube']['file']['resolution'] = ftype
                         user_data['miniapps']['youtube']['file']['bitrate'] = abitrate
                         update_config(user_data, 'users/'+st.session_state["username"]+'.yaml')
+                        add_to_data(st.session_state["username"], '/youtube', start_time)
                 else:
                     vfpss = sorted(user_data['miniapps']['youtube']['file']['task'][ftype])
                     try:
@@ -118,6 +123,7 @@ def start(authenticator):
                     except:
                         vfps = st.selectbox(idio['Select framerate'][idi], vfpss)
                     if st.button(f"⏩ {idio['Select file settings'][idi]}"):
+                        start_time = time.time()
                         yt = YouTube(url).streams
                         yt.filter(type="video", res=ftype, fps=int(vfps))[0].download(output_path='miniapps/youtube/', filename=st.session_state["username"]+'v')
                         yt.filter(type="audio", abr=abitrate)[0].download(output_path='miniapps/youtube/', filename=st.session_state["username"]+'a')
@@ -127,8 +133,10 @@ def start(authenticator):
                         user_data['miniapps']['youtube']['file']['bitrate'] = abitrate
                         user_data['miniapps']['youtube']['file']['framerate'] = vfps
                         update_config(user_data, 'users/'+st.session_state["username"]+'.yaml')
+                        add_to_data(st.session_state["username"], '/youtube', start_time)
             else:
                 if st.button(f"⏩ {idio['Select file settings'][idi]}"):
+                    start_time = time.time()
                     info_placeholder = st.empty()
                     info_placeholder.info(idio['Running...'][idi])
 
@@ -141,6 +149,7 @@ def start(authenticator):
                     update_config(user_data, 'users/'+st.session_state["username"]+'.yaml')
 
                     info_placeholder.info(idio['Finished!'][idi])
+                    add_to_data(st.session_state["username"], '/youtube', start_time)
 
             gc.collect()
 

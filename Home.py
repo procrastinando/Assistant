@@ -7,7 +7,60 @@ import random
 import string
 import pandas as pd
 
+from dateutil.tz import tzlocal
 from run_telegram import open_data, update_config
+
+def plot_bar_chart(user_name, admin, idio, idi, key):
+    jobs_type = ['/image2text', '/teacher', '/text2image', '/voice2text', '/walkie_talkie', '/youtube', 'others']
+    jobs_type_filter = st.multiselect(idio['Filter requests'][idi], jobs_type, jobs_type, key=key)
+    
+    data = pd.read_csv('data.csv')
+    if admin == False:
+        data = pd.read_csv('data.csv')[data['User'] == user_name]
+    data = data[data['job_type'].isin(jobs_type_filter)]
+
+    # Convert date column to datetime format
+    data['date'] = pd.to_datetime(data['date'], format='%Y-%m-%d-%H:%M:%S')
+
+    # Convert date column from UTC to local time zone
+    local_tz = tzlocal()
+    data['date'] = data['date'].dt.tz_localize('UTC').dt.tz_convert(local_tz)
+
+    # Create a select slider for time range
+    time_range = st.select_slider(
+        idio['Recent activity'][idi],
+        options=['Last 24 hours', 'Last 7 days', 'Last 30 days', 'Last 365 days'],
+        key=key+2
+    )
+
+    # Get the maximum date in the data
+    max_date = data['date'].max()
+
+    # Filter data based on selected time range
+    if time_range == 'Last 24 hours':
+        data = data[data['date'] >= max_date - pd.Timedelta(days=1)]
+    elif time_range == 'Last 7 days':
+        data = data[data['date'] >= max_date - pd.Timedelta(days=7)]
+    elif time_range == 'Last 30 days':
+        data = data[data['date'] >= max_date - pd.Timedelta(days=30)]
+    else:
+        data = data[data['date'] >= max_date - pd.Timedelta(days=365)]
+
+    # Group data by time period and job_type and sum the time column
+    if time_range == 'Last 24 hours':
+        data = data.groupby([pd.Grouper(key='date', freq='15min'), 'job_type'])['time'].sum().reset_index()
+    elif time_range == 'Last 7 days':
+        data = data.groupby([pd.Grouper(key='date', freq='1H'), 'job_type'])['time'].sum().reset_index()
+    elif time_range == 'Last 30 days':
+        data = data.groupby([pd.Grouper(key='date', freq='8H'), 'job_type'])['time'].sum().reset_index()
+    else:
+        data = data.groupby([pd.Grouper(key='date', freq='3D'), 'job_type'])['time'].sum().reset_index()
+
+    # Pivot the data to create a stacked column chart
+    data = data.pivot(index='date', columns='job_type', values='time')
+
+    # Plot the chart using streamlit
+    st.bar_chart(data)
 
 def create_new_user(config, user_id, name, pa, tt, au, pe, ce, ck, cn):
     user_data = {
@@ -22,6 +75,13 @@ def create_new_user(config, user_id, name, pa, tt, au, pe, ce, ck, cn):
         'location': '0',
         'azure': {},
         'miniapps': {
+            'walkie_talkie': {
+                'whisper-size': 'whisper-tiny',
+                'default': '0',
+                'contacts': {},
+                'translator_engine': 'Google translator',
+                't2v-model': 'Google TTS',
+            },
             'mathematics': {
                 'current_score': 0.0,
                 'answer': 0,
@@ -137,6 +197,10 @@ def main():
 def start(authenticator):
     user_data = open_data(st.session_state["username"])
 
+    with open('config.yaml') as file:
+        usernames = yaml.load(file, Loader=SafeLoader)['credentials']['usernames']
+    with open('config.yaml') as file:
+        admin_id = yaml.load(file, Loader=SafeLoader)['admin']['id']
     with open('idiom.yaml') as file:
         idio = yaml.load(file, Loader=SafeLoader)
     idi = user_data['idiom']
@@ -147,15 +211,7 @@ def start(authenticator):
 
     st.title(f'Welcome *{st.session_state["name"]}*')
 
-    # --- Show users balance:
-    st.subheader(f"1. {idio['Teacher assistant'][idi]}:")
-    user_coins = round(user_data['coins'], 2)
-    st.write(f"{idio['Your balance'][idi]}: $ {user_coins}")
-
     # --- Show child details
-    with open('config.yaml', 'r') as file:
-        usernames = yaml.safe_load(file)['credentials']['usernames']
-
     if user_data['childs'] != []:
         col1, col2 = st.columns([1, 1])
         with col1:
@@ -167,6 +223,10 @@ def start(authenticator):
 
         child_coins = round(child_data['coins'], 2)
         st.subheader(f'✔️ {child_name}')
+
+        ### --- Bar chart
+        plot_bar_chart(i, False, idio, idi, 1)
+
         st.write(f"{idio['Balance'][idi]}: $ {child_coins}")
 
         mathematics_current = round(child_data['miniapps']['mathematics']['current_score'] / child_data['miniapps']['mathematics']['target_score'] * 100, 2)
@@ -248,8 +308,6 @@ def start(authenticator):
                 update_config(user_data, 'users/'+st.session_state["username"]+'.yaml')
 
         # --- If admin
-        with open('config.yaml', 'r') as file:
-            admin_id = yaml.safe_load(file)['admin']['id']
         if st.session_state["username"] == admin_id:
 
             with open('config.yaml', 'r') as file:
@@ -266,6 +324,9 @@ def start(authenticator):
                 config['engines']['short'] = short_engine
                 update_config(config, 'config.yaml')
                 st.write(idio['Please restart the container'][idi])
+
+            ### --- Bar chart
+            plot_bar_chart(st.session_state["username"], True, idio, idi, 2)
 
             # Show the resources usage
             st.divider()
@@ -287,7 +348,6 @@ def start(authenticator):
                 config = yaml.load(file, Loader=SafeLoader)
             config['credenials']['usernames'].pop(st.session_state["name"])
             update_config(config, 'config.yaml')
-
 
 if __name__ == '__main__':
     st.set_page_config(
@@ -315,7 +375,7 @@ if __name__ == '__main__':
 
         if st.button("Start"):
             # Create basic directories
-            for dir_path in ['miniapps/languages/images/', 'miniapps/voice2text/', 'miniapps/youtube/', 'users/']:
+            for dir_path in ['miniapps/languages/images/', 'miniapps/voice2text/', 'miniapps/youtube/', 'miniapps/walkie_talkie/', 'users/']:
                 if not os.path.exists(dir_path):
                     os.mkdir(dir_path)
 
