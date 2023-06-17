@@ -81,7 +81,7 @@ def start(authenticator):
 
                 user_data['miniapps']['youtube']['file']['task'] = video
                 user_data['miniapps']['youtube']['request']['url'] = url
-                update_config(user_data, 'users/'+st.session_state["username"]+'.yaml')
+                update_config(st.session_state["username"], 'users/'+st.session_state["username"]+'.yaml')
 
             except:
                 st.error(idio['The video/audio can not be downloaded'][idi])

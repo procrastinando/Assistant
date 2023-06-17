@@ -57,16 +57,17 @@ def run_short(BOT_TOKEN, extra, admin_url):
             
             elif 'read_speak' in extra_data: # extra_data = user_id|read_speak|voice_file_id|reply
                 start_time = time.time()
-                user_data, message = read_speak(BOT_TOKEN, extra_data[0], extra_data[2], idio, idi)
+                user_data, message = read_speak(BOT_TOKEN, open_data(extra_data[0]), extra_data[2], idio, idi)
+                with open('users/'+extra_data[0]+'.yaml', 'w') as file:
+                    yaml.dump(user_data, file)
                 put_extra(f"{extra_data[0]}|message_reply|{message}|{extra_data[3]}")
                 take_extra('short', m)
                 add_to_data(extra_data[0], '/teacher', start_time)
 
             elif 'walkie_talkie' in extra_data: # user_id|walkie_talkie|file_id|message_id|contact
                 # Get file
+                start_time = time.time()
                 try:
-                    start_time = time.time()
-
                     resp_media = requests.get(f'https://api.telegram.org/bot{BOT_TOKEN}/getFile?file_id={extra_data[2]}')
                     response_media = resp_media.json()
                     url_media = f'https://api.telegram.org/file/bot{BOT_TOKEN}/' + response_media['result']["file_path"]

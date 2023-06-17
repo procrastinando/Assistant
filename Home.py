@@ -354,6 +354,28 @@ if __name__ == '__main__':
         page_title="Assistant",
         page_icon="💡",
     )
+
+    content = '''admin:
+    id: 
+    url: 
+    cookie:
+    expiry_days: 
+    key: 
+    name: 
+    credentials:
+    usernames: {}
+    engines:
+    large: 1
+    short: 1
+    preauthorized:
+    emails: 
+    telegram:
+    offset: 
+    token: '''
+    if not os.path.exists('config.yaml'):
+        with open(filename, 'w') as f:
+            f.write(content)
+    
     with open('config.yaml', 'r') as file:
         config = yaml.safe_load(file)
 

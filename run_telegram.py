@@ -477,7 +477,7 @@ def main():
                                             if i['message']['voice']['duration'] < 16:
                                                 with open('extra.yaml', 'r') as file:
                                                     extra = yaml.safe_load(file)
-                                                    extra['short'].append(f"{user_id}|read_speak|{i['message']['voice'][-1]['file_id']}|{i['message']['message_id']}") # send also reply
+                                                    extra['short'].append(f"{user_id}|read_speak|{i['message']['voice']['file_id']}|{i['message']['message_id']}") # send also reply
                                                 with open('extra.yaml', 'w') as file:
                                                     yaml.dump(extra, file)
                                             else:
@@ -795,10 +795,10 @@ def main():
                 gc.collect()
 
     except Exception as e:
-        with open('log.txt', 'a') as f:
-            f.write(f"{datetime.datetime.now()}: {e}\n")
-        print(e)
-        time.sleep(3)
+       with open('log.txt', 'a') as f:
+           f.write(f"{datetime.datetime.now()}: {e}\n")
+       print(e)
+       time.sleep(3)
 
 
 if __name__ == '__main__':

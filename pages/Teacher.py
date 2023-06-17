@@ -300,8 +300,8 @@ def start(authenticator):
 
             st.subheader(f"3.1. {idio['Basic operations'][idi]}:")
 
-            sum_range = st.slider(idio['Sums range'][idi], 0, 128, (child_data['miniapps']['mathematics']['homework']['sum']['lower_num'], child_data['miniapps']['mathematics']['homework']['sum']['upper_num']))
-            rest_range = st.slider(idio['Rests range'][idi], 0, 128, (child_data['miniapps']['mathematics']['homework']['rest']['lower_num'], child_data['miniapps']['mathematics']['homework']['rest']['upper_num']))
+            sum_range = st.slider(idio['Sums range'][idi], 0, 1024, (child_data['miniapps']['mathematics']['homework']['sum']['lower_num'], child_data['miniapps']['mathematics']['homework']['sum']['upper_num']))
+            rest_range = st.slider(idio['Rests range'][idi], 0, 1024, (child_data['miniapps']['mathematics']['homework']['rest']['lower_num'], child_data['miniapps']['mathematics']['homework']['rest']['upper_num']))
             multiplication_range = st.slider(idio['Multiplications range'][idi], 0, 32, (child_data['miniapps']['mathematics']['homework']['multiplication']['lower_num'], child_data['miniapps']['mathematics']['homework']['multiplication']['upper_num']))
             division_range = st.slider(idio['Divisions range'][idi], 0, 32, (child_data['miniapps']['mathematics']['homework']['division']['lower_num'], child_data['miniapps']['mathematics']['homework']['division']['upper_num']))
 
