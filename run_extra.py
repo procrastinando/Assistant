@@ -35,8 +35,16 @@ def put_extra(job):
 
 def run_short(BOT_TOKEN, extra, admin_url):
     if len(extra['short']) != 0:
-        for m in range(len(extra['short'])):
-            extra_data = extra['short'][m].split('|')
+        short_tasks = extra['short']
+
+        with open('extra.yaml', 'r') as file:
+            extra = yaml.safe_load(file)
+        extra['short'] = []
+        with open('extra.yaml', 'w') as file:
+            yaml.dump(extra, file)
+
+        for m in range(len(short_tasks)):
+            extra_data = short_tasks[m].split('|')
 
             with open('idiom.yaml', 'r') as file:
                 idio = yaml.safe_load(file)
@@ -52,7 +60,6 @@ def run_short(BOT_TOKEN, extra, admin_url):
                 text = pytesseract.image_to_string(image)
                 os.remove(image_path)
                 put_extra(f"{extra_data[0]}|message|{text}")
-                take_extra('short', m)
                 add_to_data(extra_data[0], '/image2text', start_time)
             
             elif 'read_speak' in extra_data: # extra_data = user_id|read_speak|voice_file_id|reply
@@ -61,7 +68,6 @@ def run_short(BOT_TOKEN, extra, admin_url):
                 with open('users/'+extra_data[0]+'.yaml', 'w') as file:
                     yaml.dump(user_data, file)
                 put_extra(f"{extra_data[0]}|message_reply|{message}|{extra_data[3]}")
-                take_extra('short', m)
                 add_to_data(extra_data[0], '/teacher', start_time)
 
             elif 'walkie_talkie' in extra_data: # user_id|walkie_talkie|file_id|message_id|contact
@@ -116,23 +122,18 @@ def run_short(BOT_TOKEN, extra, admin_url):
 
                                 put_extra(f"{extra_data[0]}|message_reply|{idio['You said'][idi]}:\n {result}|{extra_data[3]}")
                                 put_extra(f"{user_data['miniapps']['walkie_talkie']['default']}|audio|{config['credentials']['usernames'][extra_data[0]]['name']}:\n{translated_text}|miniapps/walkie_talkie/{extra_data[0]}/{file_name}.mp3") # user_id|audio|message|audio_path
-                                take_extra('short', m)
 
                             except:
                                 put_extra(f"{extra_data[0]}|message|{idio['Error during text to voice generation'][idi]}")
-                                take_extra('short', m)
 
                         except:
                             put_extra(f"{extra_data[0]}|message|{idio['Error during the translation'][idi]}")
-                            take_extra('short', m)
 
                     except:
                         put_extra(f"{extra_data[0]}|message|{idio['Error during transcription'][idi]}")
-                        take_extra('short', m)
 
                 except:
                     put_extra(f"{extra_data[0]}|message|{idio['Network error'][idi]}")
-                    take_extra('short', m)
 
                 add_to_data(extra_data[0], '/walkie_talkie', start_time)
 
@@ -140,8 +141,16 @@ def run_short(BOT_TOKEN, extra, admin_url):
 
 def run_large(BOT_TOKEN, extra, admin_url):
     if len(extra['large']) != 0:
-        for m in range(len(extra['large'])):
-            extra_data = extra['large'][m].split('|') # user_id|voice2text|whisper|tiny
+        large_tasks = extra['large']
+
+        with open('extra.yaml', 'r') as file:
+            extra = yaml.safe_load(file)
+        extra['large'] = []
+        with open('extra.yaml', 'w') as file:
+            yaml.dump(extra, file)
+
+        for m in range(len(large_tasks)):
+            extra_data = large_tasks[m].split('|') # user_id|voice2text|whisper|tiny
 
             with open('idiom.yaml', 'r') as file:
                 idio = yaml.safe_load(file)
@@ -156,7 +165,6 @@ def run_large(BOT_TOKEN, extra, admin_url):
                 text = generate_transcription(extra_data[3], media_file_path)
                 os.remove(media_file_path)
                 put_extra(f"{extra_data[0]}|message|{text}")
-                take_extra('large', m)
                 add_to_data(extra_data[0], '/voice2text', start_time)
 
             elif 'youtube' in extra_data: 
@@ -194,7 +202,6 @@ def run_large(BOT_TOKEN, extra, admin_url):
                         os.remove(del_file)
                     except:
                         pass
-                take_extra('large', m)
 
                 add_to_data(extra_data[0], '/youtube', start_time)
 
