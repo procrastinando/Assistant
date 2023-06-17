@@ -2,7 +2,7 @@ admin:
   id: 
   url: 
 cookie:
-  expiry_days: 1
+  expiry_days: 
   key: 
   name: 
 credentials:
