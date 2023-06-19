@@ -5,7 +5,7 @@ from faster_whisper import WhisperModel
 import openai
 import azure.cognitiveservices.speech as speechsdk
 import difflib
-import pytesseract
+import easyocr
 from PIL import Image
 import os
 from gtts import gTTS
@@ -86,7 +86,7 @@ def text2voice(config, user_data, type_hw):
                 if cancellation_details.error_details:
                     print("Error details: {}".format(cancellation_details.error_details))
                     return text, '#error'
-        
+
     elif user_data['miniapps']['read-speak']['t2v-model'] == 'google':
         try:
             tts = gTTS(text, lang=lang)
@@ -175,14 +175,102 @@ def lw_reply_markup(user_data):
         reply_markup.append([a, b])
     return reply_markup
  
-def add_ocr(images_path):
-    list_images = os.listdir(images_path)
-    list_images.sort()
+def add_ocr(images_path, languages):
 
-    texts = ''
-    for i in list_images:
-        image = Image.open(images_path + i)
-        text = pytesseract.image_to_string(image)
-        texts = texts + text + ". "
+    language_dict = {
+        "Abaza": "abq",
+        "Adyghe": "ady",
+        "Afrikaans": "af",
+        "Angika": "ang",
+        "Arabic": "ar",
+        "Assamese": "as",
+        "Avar": "ava",
+        "Azerbaijani": "az",
+        "Belarusian": "be",
+        "Bulgarian": "bg",
+        "Bihari": "bh",
+        "Bhojpuri": "bho",
+        "Bengali": "bn",
+        "Bosnian": "bs",
+        "Simplified Chinese": "ch_sim",
+        "Traditional Chinese": "ch_tra",
+        "Chechen": "che",
+        "Czech": "cs",
+        "Welsh": "cy",
+        "Danish": "da",
+        "Dargwa": "dar",
+        "German": "de",
+        "English": "en",
+        "Spanish": "es",
+        "Estonian": "et",
+        "Persian (Farsi)": "fa",
+        "French": "fr",
+        "Irish": "ga",
+        "Goan Konkani": "gom",
+        "Hindi": "hi",
+        "Croatian": "hr",
+        "Hungarian": "hu",
+        "Indonesian": "id",
+        "Ingush": "inh",
+        "Icelandic": "is",
+        "Italian": "it",
+        "Japanese": "ja",
+        "Kabardian": "kbd",
+        "Kannada": "kn",
+        "Korean": "ko",
+        "Kurdish": "ku",
+        "Latin": "la",
+        "Lak": "lbe",
+        "Lezghian": "lez",
+        "Lithuanian": "lt",
+        "Latvian": "lv",
+        "Magahi": "mah",
+        "Maithili": "mai",
+        "Maori": "mi",
+        "Mongolian": "mn",
+        "Marathi": "mr",
+        "Malay": "ms",
+        "Maltese": "mt",
+        "Nepali": "ne",
+        "Newari": "new",
+        "Dutch": "nl",
+        "Norwegian": "no",
+        "Occitan": "oc",
+        "Pali": "pi",
+        "Polish": "pl",
+        "Portuguese": "pt",
+        "Romanian": "ro",
+        "Russian": "ru",
+        "Serbian (cyrillic)": "rs_cyrillic",
+        "Serbian (latin)": "rs_latin",
+        "Nagpuri": "sck",
+        "Slovak": "sk",
+        "Slovenian": "sl",
+        "Albanian": "sq",
+        "Swedish": "sv",
+        "Swahili": "sw",
+        "Tamil": "ta",
+        "Tabassaran": "tab",
+        "Telugu": "te",
+        "Thai": "th",
+        "Tajik": "tjk",
+        "Tagalog": "tl",
+        "Turkish": "tr",
+        "Uyghur": "ug",
+        "Ukrainian": "uk",
+        "Urdu": "ur",
+        "Uzbek": "uz",
+        "Vietnamese": "vi"
+    }
 
-    return texts
+    lang_codes = []
+    for i in languages:
+        lang_codes.append(language_dict[i])
+    reader = easyocr.Reader(lang_codes) # this needs to run only once to load the model into memory
+    result = reader.readtext(images_path)
+
+    text = ''
+    for i in result:
+        text = text + " " + i[1]
+
+    return text

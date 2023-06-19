@@ -4,7 +4,6 @@ streamlit-authenticator
 pyyaml
 openai
 azure-cognitiveservices-speech
-pytesseract
 gTTS
 httpx
 pytube
@@ -13,3 +12,5 @@ srt
 psutil
 elevenlabslib
 pytz
+pandas
+easyocr

@@ -247,28 +247,30 @@ def start(authenticator):
                 update_config(child_data, 'users/'+i+'.yaml')
 
             # update existing vocabulary
-            try:
-                if update_vocabulary:
+            if update_vocabulary:
+                try:
                     child_data['miniapps']['listen-write']['homework_conf'][vocabulary_name]['prompt'] = chatgpt_prompt
-                    child_data['miniapps']['listen-write']['homework_conf'][vocabulary_name]['lang'] = lang_voc.split(':')[0]
-                    vocabulary = vocabulary.replace('，', ',')
-                    vocabulary = vocabulary.strip(', ')
-                    vocabulary = vocabulary.replace(', ', ',')
-                    vocabulary = vocabulary.split(',')
-                    vocabulary = [word.lower() for word in vocabulary]
+                except:
+                    pass
 
-                    for l in vocabulary:
-                        if l not in vocabulary_list:
-                            child_data['miniapps']['listen-write']['homework'][vocabulary_name][clean_text(l)] = 1.0
-                            
-                    for m in list(vocabulary_list.keys()):
-                        if m not in vocabulary:
-                            child_data['miniapps']['listen-write']['homework'][vocabulary_name].pop(m)
-                    
-                    update_config(child_data, 'users/'+i+'.yaml')
-            except:
-                pass
+                child_data['miniapps']['listen-write']['homework_conf'][vocabulary_name]['lang'] = lang_voc.split(':')[0]
+                vocabulary = vocabulary.replace('，', ',')
+                vocabulary = vocabulary.strip(', ')
+                vocabulary = vocabulary.replace(', ', ',')
+                vocabulary = vocabulary.split(',')
+                vocabulary = [word.lower() for word in vocabulary]
 
+                st.write(vocabulary)
+
+                for l in vocabulary:
+                    if l not in vocabulary_list:
+                        child_data['miniapps']['listen-write']['homework'][vocabulary_name][clean_text(l)] = 1.0
+
+                for m in list(vocabulary_list.keys()):
+                    if m not in vocabulary:
+                        child_data['miniapps']['listen-write']['homework'][vocabulary_name].pop(m)
+
+                update_config(child_data, 'users/'+i+'.yaml')
 
             # --- Mathematics
             st.divider()

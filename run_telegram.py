@@ -38,6 +38,7 @@ def create_new_user(config, BOT_TOKEN, user_id, i):
         'location': '0',
         'azure': {},
         'miniapps': {
+            'image2text': ['English'],
             'walkie_talkie': {
                 'whisper-size': 'whisper-tiny',
                 'default': '0',
@@ -417,11 +418,11 @@ def main():
                                         send_message(BOT_TOKEN, user_id, idio['Insert a new user ID to add to your contacts'][idi])
 
                                     else:
-                                        reply_markup = [[{'text': idio['Add contact'][idi], 'callback_data': "add#"}]]
+                                        reply_markup = [[{'text': idio['Add contact'][idi], 'callback_data': "add#"}, {'text': idio['Remove contact'][idi], 'callback_data': "remove#"}]]
                                         for l in list(user_data['miniapps']['walkie_talkie']['contacts'].keys()):
                                             reply_markup.append([{'text': f"{l} - {config['credentials']['usernames'][l]['name']}", 'callback_data': f"{l}#"}]) # 123456 - carl
 
-                                        text = f"{idio['Send voice to'][idi]} {l} - {config['credentials']['usernames'][l]['name']}, {idio['or select other contact'][idi]}"
+                                        text = f"{idio['Send voice to'][idi]}\n {l} - {config['credentials']['usernames'][l]['name']}\n {idio['or select other contact'][idi]}"
                                         send_inline(BOT_TOKEN, user_id, text, reply_markup)
 
                                 elif i['message']['text'] == '/youtube': # <<====
@@ -504,7 +505,7 @@ def main():
                                         send_inline(BOT_TOKEN, user_id, idio['Whisper size (the larger, the slower)'][idi], reply_markup)
 
                                 elif user_data['location'] == '/walkie_talkie':
-                                    if i['message']['voice']['duration'] < 16:
+                                    if i['message']['voice']['duration'] < 31:
                                         with open('extra.yaml', 'r') as file:
                                             extra = yaml.safe_load(file)
                                             extra['short'].append(f"{user_id}|walkie_talkie|{i['message']['voice']['file_id']}|{i['message']['message_id']}|{user_data['miniapps']['walkie_talkie']['default']}") # user_id|walkie_talkie|file_id|message_id|contact
@@ -525,7 +526,8 @@ def main():
                                         with open('miniapps/languages/images/'+user_id, 'wb') as file:
                                             file.write(response.content)
 
-                                        extra = yaml.safe_load(file)
+                                        with open('extra.yaml', 'r') as extra_file:
+                                            extra = yaml.safe_load(extra_file)
                                         extra['short'].append(f"{user_id}|img2text")
 
                                     with open('extra.yaml', 'w') as file:
@@ -592,8 +594,8 @@ def main():
                                     send_message(BOT_TOKEN, user_id, f"{idio['Password changed!'][idi]}\n{idio['Your ID'][idi]}: {user_id}\n{idio['Access to your console here'][idi]}: {config['admin']['url']}")
 
                                 elif user_data['location'] == '/add_member':
-                                    reply_markup = [[{'text': 'yes', 'callback_data': f"{user_id}&{1}"}]] 
                                     send_message(BOT_TOKEN, user_id, idio["Request sent. Accept from the other device"][idi])
+                                    reply_markup = [[{'text': '✔️', 'callback_data': f"{user_id}&{1}"}]]
                                     send_inline(BOT_TOKEN, i['message']['text'], f"{idio['Request from'][idi]} {user_id} {idio['to manage your account, Respond yes to accept'][idi]}", reply_markup)
 
                         elif 'callback_query' in i:
@@ -609,7 +611,7 @@ def main():
                                     reply_markup = [[{'text': idio['Add contact'][idi], 'callback_data': "add#"}, {'text': idio['Remove contact'][idi], 'callback_data': "remove#"}]]
                                     for l in list(user_data['miniapps']['walkie_talkie']['contacts'].keys()):
                                         reply_markup.append([{'text': f"{config['credentials']['usernames'][l]['name']} - {l}", 'callback_data': f"{l}#"}]) # carl - 123456
-                                    text = f"{idio['Contact added'][idi]}!\n{idio['Send voice to'][idi]} {config['credentials']['usernames'][l]['name']} - {l}, {idio['or select other contact'][idi]}"
+                                    text = f"{idio['Contact added'][idi]}!\n{idio['Send voice to'][idi]}\n {config['credentials']['usernames'][l]['name']} - {l}\n {idio['or select other contact'][idi]}"
                                     send_inline(BOT_TOKEN, user_id, text, reply_markup)
 
                                 elif 'add' in cb_data:
@@ -635,17 +637,18 @@ def main():
                                         for l in list(user_data['miniapps']['walkie_talkie']['contacts'].keys()):
                                             reply_markup.append([{'text': f"{l} - {config['credentials']['usernames'][l]['name']}", 'callback_data': f"{l}#"}]) # 123456 - carl
 
-                                        text = f"{idio['Contact deleted'][idi]}!\n{idio['Send voice to'][idi]} {config['credentials']['usernames'][l]['name']} - {l}, {idio['or select other contact'][idi]}"
+                                        text = f"{idio['Contact deleted'][idi]}!\n{idio['Send voice to'][idi]}\n {config['credentials']['usernames'][l]['name']} - {l}\n {idio['or select other contact'][idi]}"
                                         send_inline(BOT_TOKEN, user_id, text, reply_markup)
 
-                                else: # 
+                                else: # select a contact
                                     user_data['miniapps']['walkie_talkie']['default'] = cb_data[0]
 
                                     reply_markup = [[{'text': idio['Add contact'][idi], 'callback_data': "add#"}, {'text': idio['Remove contact'][idi], 'callback_data': "remove#"}]]
                                     for l in list(user_data['miniapps']['walkie_talkie']['contacts'].keys()):
                                         reply_markup.append([{'text': f"{l} - {config['credentials']['usernames'][l]['name']}", 'callback_data': f"{l}#"}]) # 123456 - carl
 
-                                    text = f"{idio['Send voice to'][idi]} {config['credentials']['usernames'][l]['name']} - {l}, {idio['or select other contact'][idi]}"
+                                    default_contact = user_data['miniapps']['walkie_talkie']['default']
+                                    text = f"{idio['Send voice to'][idi]}\n {config['credentials']['usernames'][default_contact]['name']} - {default_contact}\n {idio['or select other contact'][idi]}"
                                     send_inline(BOT_TOKEN, user_id, text, reply_markup)
 
                             # Voice2text

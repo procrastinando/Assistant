@@ -16,7 +16,7 @@ def plot_bar_chart(user_name, admin, idio, idi, key):
     
     data = pd.read_csv('data.csv')
     if admin == False:
-        data = pd.read_csv('data.csv')[data['User'] == user_name]
+        data = pd.read_csv('data.csv')[data['User'] == int(user_name)]
     data = data[data['job_type'].isin(jobs_type_filter)]
 
     # Convert date column to datetime format
@@ -64,7 +64,7 @@ def plot_bar_chart(user_name, admin, idio, idi, key):
 
 def create_new_user(config, user_id, name, pa, tt, au, pe, ce, ck, cn):
     user_data = {
-        'idiom': 'en',
+        'idiom': 'English',
         'credentials': {
             'share': [],
             'azure': {}
@@ -75,6 +75,7 @@ def create_new_user(config, user_id, name, pa, tt, au, pe, ce, ck, cn):
         'location': '0',
         'azure': {},
         'miniapps': {
+            'image2text': ['en'],
             'walkie_talkie': {
                 'whisper-size': 'whisper-tiny',
                 'default': '0',
@@ -355,26 +356,38 @@ if __name__ == '__main__':
         page_icon="💡",
     )
 
-    content = '''admin:
-    id: 
-    url: 
-    cookie:
-    expiry_days: 
-    key: 
-    name: 
-    credentials:
-    usernames: {}
-    engines:
-    large: 1
-    short: 1
-    preauthorized:
-    emails: 
-    telegram:
-    offset: 
-    token: '''
+    data = {
+        'admin': {
+            'id': None,
+            'url': None
+        },
+        'cookie': {
+            'expiry_days': None,
+            'key': None,
+            'name': None
+        },
+        'credentials': {
+            'usernames': {}
+        },
+        'engines': {
+            'large': 1,
+            'short': 1
+        },
+        'preauthorized': {
+            'emails': None
+        },
+        'telegram': {
+            'offset': None,
+            'token': None
+        }
+    }
+
     if not os.path.exists('config.yaml'):
-        with open(filename, 'w') as f:
-            f.write(content)
+        with open('config.yaml', 'w') as file:
+            yaml.dump(data, file)
+    if not os.path.exists('system_stats.yaml'):
+        with open('system_stats.csv', 'w') as file:
+            pass
     
     with open('config.yaml', 'r') as file:
         config = yaml.safe_load(file)

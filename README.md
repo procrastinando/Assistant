@@ -90,6 +90,7 @@ services:
     image: assistant
     ports:
       - "85:8501"
+    restart: unless-stopped
 ```
 To do:
 * Show statistics of activity (user and members)
