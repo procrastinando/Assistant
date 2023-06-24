@@ -171,7 +171,7 @@ def run_large(BOT_TOKEN, extra, admin_url):
                 start_time = time.time()
 
                 cb_data = extra_data[4].split("*") # cb_data => user_id*resolution*bitrate*fps
-                size_exceeded = f"{idio['File size exceeded, download the file here'][idi]}:\n{admin_url}"
+                size_exceeded = f"{idio['File size exceeded, download the file here'][idi]}:\n{admin_url+'YoutTube'}"
                 del_list = ['miniapps/youtube/'+cb_data[0]+'a', 'miniapps/youtube/'+cb_data[0]+'v']
 
                 if len(cb_data) == 4: # there is fps information
