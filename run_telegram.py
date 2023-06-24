@@ -22,7 +22,7 @@ def get_user_id(i):
         try:
             user_id = i['callback_query']['from']['id']
         except:
-            user_id = None
+            user_id = 'None'
     return str(user_id)
 
 def create_new_user(config, BOT_TOKEN, user_id, i):
@@ -304,7 +304,7 @@ def main():
                 user_id = get_user_id(i)
                 users = list(config['credentials']['usernames'].keys())
 
-                if user_id != None:
+                if user_id != 'None':
                     if user_id not in users:
                         create_new_user(config, BOT_TOKEN, user_id, i)
                         update_config(config, 'config.yaml')
