@@ -403,7 +403,7 @@ if __name__ == '__main__':
         na = st.text_input("Set name")
         tt = st.text_input("Set Telegram bot Token")
         pe = st.text_input("Set preauthorized email")
-        au = st.text_input("Set App URL", "http://localhost:8501")
+        au = st.text_input("Set App URL", "http://localhost:8501/")
         ce = st.text_input("Set cookie expiry days", 30)
         ck = st.text_input("Set cookie key", ''.join(random.choice(string.ascii_lowercase) for _ in range(16)))
         cn = st.text_input("Set cookie name", ''.join(random.choice(string.ascii_lowercase) for _ in range(16)))
