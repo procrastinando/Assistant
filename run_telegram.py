@@ -800,18 +800,19 @@ def main():
 
     except Exception as e:
         with open('log.txt', 'a') as f:
-            f.write(f"{datetime.datetime.now()}: {e}\n")
+            import sys
+            f.write(f"{datetime.datetime.now()}:\n run_telegram - line: {sys.exc_info()[-1].tb_lineno}\n{e}")
             try:
-                f.write(f"{user_id} - {i['message']['text']}")
+                f.write(f"{user_id} - {i['message']['text']}\n")
             except:
                 try:
-                    f.write(f"{user_id} - {i['message']['voice']}")
+                    f.write(f"{user_id} - {i['message']['voice']}\n")
                 except:
                     try:
-                        f.write(f"{user_id} - {i['message']['photo']}")
+                        f.write(f"{user_id} - {i['message']['photo']}\n")
                     except:
                         try:
-                            f.write(f"{user_id} - {i['callback_query']['data']}")
+                            f.write(f"{user_id} - {i['callback_query']['data']}\n")
                         except:
                             pass
         time.sleep(3)
