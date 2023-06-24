@@ -291,6 +291,7 @@ def main():
         delete_old_files('miniapps/voice2text/', 1800)
         delete_old_files('miniapps/walkie_talkie/', 1800)
         process_extra(BOT_TOKEN)
+        add_to_data(config['admin']['id'], 'none', time.time())
 
         # Set everything to start
         response = requests.get(url)
@@ -798,10 +799,22 @@ def main():
                 gc.collect()
 
     except Exception as e:
-       with open('log.txt', 'a') as f:
-           f.write(f"{datetime.datetime.now()}: {e}\n")
-       print(e)
-       time.sleep(3)
+        with open('log.txt', 'a') as f:
+            f.write(f"{datetime.datetime.now()}: {e}\n")
+            try:
+                f.write(f"{user_id} - {i['message']['text']}")
+            except:
+                try:
+                    f.write(f"{user_id} - {i['message']['voice']}")
+                except:
+                    try:
+                        f.write(f"{user_id} - {i['message']['photo']}")
+                    except:
+                        try:
+                            f.write(f"{user_id} - {i['callback_query']['data']}")
+                        except:
+                            pass
+        time.sleep(3)
 
 
 if __name__ == '__main__':
