@@ -269,6 +269,9 @@ def process_extra(BOT_TOKEN):
         yaml.dump(extra, file)
 
 def add_to_data(user, job_type, start_time):
+    if not os.path.exists('data.csv'): 
+         with open('data.csv', 'w') as file: 
+             yaml.dump('date,User,job_type,time', file)
     data = pd.read_csv('data.csv')
     current_date_time = datetime.datetime.now(pytz.utc).strftime('%Y-%m-%d-%H:%M:%S')
     total_time = (time.time() - start_time) / 60
